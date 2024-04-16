@@ -34,11 +34,13 @@
     </div>
     <!-- 按钮-->
     <div style="margin: 10px 0;" >
-      <el-popconfirm title="确认禁用?" @confirm="deleteBatch" v-if="user.role == 1">
+      <el-button type="primary" @click = "add" v-if="user.role == 2">添加读者</el-button>
+      <el-popconfirm title="确认禁用?" @confirm="deleteBatch" v-if="user.role == 2">
         <template #reference>
           <el-button type="danger" size="mini" >批量禁用</el-button>
         </template>
       </el-popconfirm>
+
     </div>
 <!-- 数据字段-->
     <el-table :data="tableData" stripe border="true"  @selection-change="handleSelectionChange" >
@@ -88,6 +90,10 @@
           <el-form-item label="电话号码">
             <el-input style="width: 80%" v-model="form.phone"></el-input>
           </el-form-item>
+          <el-form-item label="密码(默认123)">
+            <el-input style="width: 80%" v-model="form.password"></el-input>
+          </el-form-item>
+
           <el-form-item label="性别">
             <div>
               <el-radio v-model="form.sex" label="男">男</el-radio>

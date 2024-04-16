@@ -17,12 +17,12 @@
             </svg>
             <span>主页</span>
     </el-menu-item>
-<!--    <el-menu-item index="/dashboard" >-->
-<!--      <svg class="icon" aria-hidden="true">-->
-<!--        <use xlink:href="#icondashboard "></use>-->
-<!--      </svg>-->
-<!--      <span>数据可视化</span>-->
-<!--    </el-menu-item>-->
+    <el-menu-item index="/dashboard" v-if="user.role == 1">
+      <svg class="icon" aria-hidden="true">
+        <use xlink:href="#icondashboard "></use>
+      </svg>
+      <span>数据可视化</span>
+    </el-menu-item>
 
     <el-sub-menu index="2" text-color="#fff">
       <template #title>
@@ -80,9 +80,9 @@
 <!--      </svg>-->
 <!--      <span>借阅信息</span>-->
 <!--    </el-menu-item>-->
-    <el-menu-item index="/bookwithuser" >
+    <el-menu-item index="/bookwithuser" v-if="user.role == 3">
       <el-icon><grid /></el-icon>
-      <span>借阅状态</span>
+      <span>借阅历史</span>
     </el-menu-item>
   </el-menu>
 
