@@ -12,7 +12,7 @@ public class RegexUtils {
      * @return true:符合，false：不符合
      */
     public static boolean isPhoneInvalid(String phone){
-        return mismatch(phone, RegexPatterns.PHONE_REGEX);
+        return mismatch(phone, RegexPatterns.EMAIL_REGEX);
     }
     /**
      * 是否是无效邮箱格式
