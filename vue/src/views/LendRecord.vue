@@ -54,7 +54,7 @@
           <el-tag v-else type="success">已归还</el-tag>
         </template>
       </el-table-column>
-      <el-table-column v-if="user.role === 1" label="操作" width="230px">
+      <el-table-column v-if="user.role === 2" label="操作" width="230px">
         <template v-slot="scope">
           <el-button  size="mini" @click ="handleEdit(scope.row)">编辑</el-button>
           <el-popconfirm title="确认删除?" @confirm="handleDelete(scope.row)">

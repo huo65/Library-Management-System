@@ -14,6 +14,7 @@
             <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
           </el-input>
         </el-form-item >
+
         <el-form-item label="借阅者" v-if="user.role == 1">
           <el-input v-model="search3" placeholder="请输入借阅者昵称"  clearable>
             <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
@@ -29,7 +30,7 @@
     </div>
     <!-- 按钮-->
     <div style="margin: 10px 0;" >
-      <el-popconfirm title="确认归还?" @confirm="deleteBatch" v-if="user.role == 1">
+      <el-popconfirm title="确认归还?" @confirm="deleteBatch" v-if="user.role == 3">
         <template #reference>
           <el-button type="danger" size="mini" >批量归还</el-button>
         </template>
@@ -37,7 +38,7 @@
     </div>
     <!-- 数据字段-->
     <el-table :data="tableData" stripe border="true" @selection-change="handleSelectionChange">
-      <el-table-column v-if="user.role ==1"
+      <el-table-column v-if="user.role ==3"
           type="selection"
           width="55">
       </el-table-column>
@@ -49,13 +50,13 @@
       <el-table-column prop="prolong" label="可续借次数" />
       <el-table-column fixed="right" label="操作" >
         <template v-slot="scope">
-          <el-button  size="mini" @click ="handleEdit(scope.row)" v-if="user.role == 1">修改</el-button>
-          <el-popconfirm title="确认归还?" @confirm="handleDelete(scope.row) " v-if="user.role == 1">
+<!--          <el-button  size="mini" @click ="handleEdit(scope.row)" v-if="user.role == 1">修改</el-button>-->
+          <el-popconfirm title="确认归还?" @confirm="handleDelete(scope.row) " v-if="user.role == 3">
             <template #reference>
               <el-button type="danger" size="mini" >归还</el-button>
             </template>
           </el-popconfirm>
-          <el-popconfirm title="确认续借(续借一次延长30天)?" @confirm="handlereProlong(scope.row)" v-if="user.role == 2" :disabled="scope.row.prolong == 0">
+          <el-popconfirm title="确认续借(续借一次延长30天)?" @confirm="handlereProlong(scope.row)" v-if="user.role == 3" :disabled="scope.row.prolong == 0">
             <template #reference>
               <el-button type="danger" size="mini" :disabled="scope.row.prolong == 0" >续借</el-button>
             </template>

@@ -53,21 +53,22 @@
     </div>
     <!-- 数据字段-->
     <el-table :data="tableData" stripe border="true" @selection-change="handleSelectionChange">
-      <el-table-column v-if="user.role ==1"
-                       type="selection"
-                       width="55">
-      </el-table-column>
       <el-table-column prop="isbn" label="图书编号" sortable />
       <el-table-column prop="name" label="图书名称" />
       <el-table-column prop="price" label="价格" sortable/>
       <el-table-column prop="author" label="作者" />
       <el-table-column prop="publisher" label="出版社" />
       <el-table-column prop="createTime" label="出版时间" sortable/>
-      <el-table-column prop="borrownum" label="总借阅次数" sortable/>
+      <el-table-column v-if="user.role== 2" prop="borrownum" label="总借阅次数" sortable/>
+
+<!--      <el-table-column prop="totalNumber" label="数量" sortable/>-->
+<!--      <el-table-column prop="leftNumber" label="剩余数量" sortable/>-->
+      <el-table-column prop="location" label="存放位置" sortable/>
+
       <el-table-column prop="status" label="状态">
         <template v-slot="scope">
-          <el-tag v-if="scope.row.status == 0" type="warning">已借阅</el-tag>
-          <el-tag v-else type="success">未借阅</el-tag>
+          <el-tag v-if=" scope.row.leftNumber ==0" type="warning">不可借阅</el-tag>
+          <el-tag v-else type="success">可借阅</el-tag>
         </template>
       </el-table-column>
       <el-table-column fixed="right" label="操作" >
@@ -78,12 +79,12 @@
               <el-button type="danger" size="mini" >下架</el-button>
             </template>
           </el-popconfirm>
-          <el-button  size="mini" @click ="handlelend(scope.row.id,scope.row.isbn,scope.row.name,scope.row.borrownum)" v-if="user.role == 3 " :disabled="scope.row.status == 0">借阅</el-button>
-          <el-popconfirm title="确认还书?" @confirm="handlereturn(scope.row.id,scope.row.isbn,scope.row.borrownum)" v-if="user.role == 3 " :disabled="scope.row.status == 1">
-            <template #reference>
-              <el-button type="danger" size="mini" :disabled="(this.isbnArray.indexOf(scope.row.isbn)) == -1 ||scope.row.status == 1" >还书</el-button>
-            </template>
-          </el-popconfirm>
+          <el-button  size="mini" @click ="handlelend(scope.row.id,scope.row.isbn,scope.row.name,scope.row.borrownum,scope.row.leftNumber)" v-if="user.role == 3 " :disabled="scope.row.leftNumber == 0">借阅</el-button>
+<!--          <el-popconfirm title="确认还书?" @confirm="handlereturn(scope.row.id,scope.row.isbn,scope.row.borrownum)" v-if="user.role == 3 " :disabled="scope.row.status == 1">-->
+<!--            <template #reference>-->
+<!--              <el-button type="danger" size="mini" :disabled="(this.isbnArray.indexOf(scope.row.isbn)) == -1 ||scope.row.status == 1" >还书</el-button>-->
+<!--            </template>-->
+<!--          </el-popconfirm>-->
         </template>
       </el-table-column>
     </el-table>
@@ -145,6 +146,9 @@
               <el-date-picker value-format="YYYY-MM-DD" type="date" style="width: 80%" clearable v-model="form.createTime" ></el-date-picker>
             </div>
           </el-form-item>
+          <el-form-item label="存放位置">
+            <el-input style="width: 80%" v-model="form.location"></el-input>
+          </el-form-item>
         </el-form>
         <template #footer>
       <span class="dialog-footer">
@@ -176,6 +180,9 @@
             <div>
               <el-date-picker value-format="YYYY-MM-DD" type="date" style="width: 80%" clearable v-model="form.createTime" ></el-date-picker>
             </div>
+          </el-form-item>
+          <el-form-item label="存放位置">
+            <el-input style="width: 80%" v-model="form.location"></el-input>
           </el-form-item>
         </el-form>
         <template #footer>
@@ -260,6 +267,7 @@ export default {
           console.log(res)
           this.bookData = res.data.records
           this.number = this.bookData.length;
+          // 逾期逻辑
           var nowDate = new Date();
           for(let i=0; i< this.number; i++){
             this.isbnArray[i] = this.bookData[i].isbn;
@@ -346,7 +354,7 @@ export default {
       //
       })
     },
-    handlelend(id,isbn,name,bn){
+    handlelend(id,isbn,name,bn,left){
 
       if (this.phone == null){
         ElMessage.error("借阅失败! 请先将个人信息补充完整")
@@ -374,6 +382,7 @@ export default {
       this.form.status = "0"
       this.form.id = id
       this.form.borrownum = bn+1
+      this.form.leftNumber = left - 1;
       console.log(bn)
       request.put("/book",this.form).then(res =>{
         console.log(res)
@@ -403,20 +412,20 @@ export default {
         this.load();
 
       })
-      let form3 ={};
-      form3.isbn = isbn;
-      form3.bookName = name;
-      form3.nickName = this.user.username;
-      form3.id = this.user.id;
-      form3.lendtime = startDate;
-      let nowDate = new Date(startDate);
-      nowDate.setDate(nowDate.getDate()+30);
-      form3.deadtime = moment(nowDate).format("yyyy-MM-DD HH:mm:ss");
-      form3.prolong  = 1;
-      request.post("/bookwithuser/insertNew",form3).then(res =>{
-        console.log(res)
-        this.load()
-      })
+      // let form3 ={};
+      // form3.isbn = isbn;
+      // form3.bookName = name;
+      // form3.nickName = this.user.username;
+      // form3.id = this.user.id;
+      // form3.lendtime = startDate;
+      // let nowDate = new Date(startDate);
+      // nowDate.setDate(nowDate.getDate()+30);
+      // form3.deadtime = moment(nowDate).format("yyyy-MM-DD HH:mm:ss");
+      // form3.prolong  = 1;
+      // request.post("/bookwithuser/insertNew",form3).then(res =>{
+      //   console.log(res)
+      //   this.load()
+      // })
     },
     add(){
       this.dialogVisible= true

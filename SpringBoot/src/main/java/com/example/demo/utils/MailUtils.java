@@ -1,5 +1,6 @@
 package com.example.demo.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -18,6 +19,7 @@ import javax.mail.internet.MimeMessage;
  * @date 2024/04/19 21:32
  **/
 
+
 public class MailUtils {
     public static void sendMail(String clientMail,String code) throws MessagingException {
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
@@ -26,9 +28,8 @@ public class MailUtils {
         javaMailSender.setPort(465);                        // 设置端口
         javaMailSender.setUsername("1599272181@qq.com");    // 设置用户名
 //        javaMailSender.setPassword("<你的密码/授权码>");      // 设置密码（记得替换为你实际的密码、授权码）
-        javaMailSender.setPassword("fvufkpbzkajdgfhe");
-        javaMailSender.setProtocol("smtps");                // 设置协议
 
+        javaMailSender.setProtocol("smtps");                // 设置协议
 
         message.setFrom("1599272181@qq.com");
         message.setTo(clientMail);
