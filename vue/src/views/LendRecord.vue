@@ -41,7 +41,7 @@
     </div>
 
     <!--按钮-->
-    <div style="margin: 10px 0;" v-if="user.role == 1">
+    <div style="margin: 10px 0;" v-if="user.role == 2">
       <el-popconfirm title="Confirm delete?" @confirm="deleteBatch">
         <template #reference>
           <el-button type="danger" size="mini">Multi delete</el-button>
