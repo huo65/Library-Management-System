@@ -77,13 +77,16 @@
       <el-table-column prop="author" label="author"/>
       <el-table-column prop="publisher" label="Publisher"/>
       <el-table-column prop="createTime" label="Date of publication" sortable/>
-      <el-table-column prop="borrownum" label="Borrowed time" sortable/>
-      <el-table-column prop="status" label="Status">
-        <template v-slot="scope">
-          <el-tag v-if="scope.row.status == 0" type="warning">Borrowed</el-tag>
-          <el-tag v-else type="success">Not borrowed</el-tag>
-        </template>
-      </el-table-column>
+      <el-table-column prop="borrownum" label="Borrowed time" sortable v-if="user.role == 2"/>
+
+<!--      <el-table-column prop="leftNumber" label="leftNumber">-->
+<!--        <template v-slot="scope">-->
+<!--          <el-tag v-if="scope.row.leftNumber == 1" type="warning">Borrowed</el-tag>-->
+<!--          <el-tag v-else type="success">Not borrowed</el-tag>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+      <el-table-column prop="totalNumber" label="Total" sortable/>
+      <el-table-column prop="leftNumber" label="Remaining" sortable/>
       <el-table-column fixed="right" label="Operation">
         <template v-slot="scope">
           <el-button size="mini" @click="handleEdit(scope.row)" v-if="user.role == 2">Modify</el-button>
@@ -93,17 +96,17 @@
             </template>
           </el-popconfirm>
           <el-button size="mini" @click="handlelend(scope.row.id,scope.row.isbn,scope.row.name,scope.row.borrownum)"
-                     v-if="user.role == 3 " :disabled="scope.row.status == 0">borrow
+                     v-if="user.role == 3 " :disabled="scope.row.leftNumber == 0">borrow
           </el-button>
-          <el-popconfirm title="Confirm Return?"
-                         @confirm="handlereturn(scope.row.id,scope.row.isbn,scope.row.borrownum)" v-if="user.role == 3 "
-                         :disabled="scope.row.status == 1">
-            <template #reference>
-              <el-button type="danger" size="mini"
-                         :disabled="(this.isbnArray.indexOf(scope.row.isbn)) == -1 ||scope.row.status == 1">Return
-              </el-button>
-            </template>
-          </el-popconfirm>
+<!--          <el-popconfirm title="Confirm Return?"-->
+<!--                         @confirm="handlereturn(scope.row.id,scope.row.isbn,scope.row.borrownum)" v-if="user.role == 3 "-->
+<!--                         :disabled="scope.row.status == 1">-->
+<!--            <template #reference>-->
+<!--              <el-button type="danger" size="mini"-->
+<!--                         :disabled="(this.isbnArray.indexOf(scope.row.isbn)) == -1 ||scope.row.status == 1">Return-->
+<!--              </el-button>-->
+<!--            </template>-->
+<!--          </el-popconfirm>-->
         </template>
       </el-table-column>
     </el-table>
