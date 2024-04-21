@@ -1,16 +1,17 @@
 <template>
 <div  class="login-container"  >
+  
     <el-form ref="form" :model="form"   :rules="rules" class="login-page">
-      <h2 class="title" style="margin-bottom: 20px;text-align: center">图书借阅与管理系统登陆</h2>
+      <h2 class="title" style="margin-bottom: 20px;text-align: center">Login</h2>
       <el-form-item prop="username" >
-        <el-input v-model="form.username"  placeholder="用户名" clearable>
+        <el-input v-model="form.username"  placeholder="Username" clearable>
           <template #prefix>
             <el-icon class="el-input__icon"><User /></el-icon>
           </template>
         </el-input>
       </el-form-item>
       <el-form-item prop="password">
-        <el-input v-model="form.password" placeholder="密码" clearable show-password>
+        <el-input v-model="form.password" placeholder="Password" clearable show-password>
           <template #prefix>
             <el-icon class="el-input__icon"><Lock /></el-icon>
           </template>
@@ -18,16 +19,16 @@
       </el-form-item>
       <el-form-item>
         <div style="display: flex">
-          <el-input  v-model="form.validCode" style="width: 45%;" placeholder="请输入验证码"></el-input>
+          <el-input  v-model="form.validCode" style="width: 45%;" placeholder="Captcha"></el-input>
           <ValidCode @input="createValidCode" style="width: 50%"/>
         </div>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary"  style=" width: 100%;height: 130%;font-size: 16px" @click="login">登 录</el-button>
+        <el-button type="primary"  style=" width: 100%;height: 130%;font-size: 16px" @click="login">Log in</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button type="text" style="font-size: 16px;width: 20%; color: #ee7463" @click="$router.push('/forget')">忘记密码?</el-button>
-        <el-button type="text" style="font-size: 16px;margin-left: 139px" @click="$router.push('/register')">没有账号?前往注册</el-button>
+        <el-button type="text" style="font-size: 16px;width: 20%; color: #ee7463" @click="$router.push('/forget')">Forgot password?</el-button>
+        <el-button type="text" style="font-size: 16px;margin-left: 139px" @click="$router.push('/register')">Don't have account?Sign up</el-button>
       </el-form-item>
     </el-form>
 </div>
@@ -52,14 +53,14 @@ export default {
         username: [
           {
             required: true,
-            message: '请输入用户名',
+            message: 'username',
             trigger: 'blur',
           }
         ],
         password: [
           {
             required: true,
-            message: '请输入密码',
+            message: 'password',
             trigger: 'blur',
           }
         ]
@@ -76,17 +77,17 @@ export default {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           if (!this.form.validCode) {
-            ElMessage.error("请填写验证码")
+            ElMessage.error("enter the verification code")
             return
           }
           if(this.form.validCode.toLowerCase() !== this.validCode.toLowerCase()) {
-            ElMessage.error("验证码错误")
+            ElMessage.error("verification code error")
             return
           }
 
           request.post("user/login", this.form).then(res => {
             if (res.code == 0) {
-              ElMessage.success("登录成功")
+              ElMessage.success("Login successful")
               sessionStorage.setItem("user",JSON.stringify(res.data))//缓存用户信息
               this.$router.push("/welcome")
             } else {
@@ -107,20 +108,32 @@ export default {
   position: fixed;
   width: 100%;
   height: 100vh;
-  background: url('../img/bg2.svg');
-  background-size: contain;
+  background: url('../img/bg3.jpg');
+  background-size: cover;
   overflow: hidden;
 }
+
 .login-page {
-  border-radius: 5px;
-  margin: 300px auto;
+  position: relative;
+  border-radius: 15px;
   width: 420px;
-  padding: 35px 35px 15px;
-  background: #fff;
+  padding: 0 50px;
   border: 1px solid #eaeaea;
-  box-shadow: 0 0 25px #cac6c6;
+  background-color: #fff;
+  box-shadow: 0 5px 25px rgba(0,0,0,0.25); 
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
-/deep/ .el-input__inner{
-  height: 40px;
+.title {
+            font-size: 35px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 100px;
+        }
+
+
+::v-deep .el-input__inner{
+  height: 50px;
 }
 </style>
