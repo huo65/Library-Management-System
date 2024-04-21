@@ -1,6 +1,6 @@
 <template>
   <div class="welcome-container">
-    <h1 class="welcome-title">欢迎使用B5图书管理系统</h1>
+    <h1 class="welcome-title">Welcome to B5 library management system</h1>
   </div>
 </template>
 

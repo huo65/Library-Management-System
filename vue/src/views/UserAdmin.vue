@@ -4,40 +4,40 @@
 <!-- 搜索-->
     <div style="margin: 10px 0;">
       <el-form inline="true" size="small">
-        <el-form-item label="管理员编号" >
-      <el-input v-model="search1" placeholder="请输入管理员编号"  clearable>
+        <el-form-item label="Admin id" >
+      <el-input v-model="search1" placeholder="Please enter Admin id"  clearable>
         <template #prefix><el-icon class="el-input__icon"><search/></el-icon></template>
       </el-input>
           </el-form-item >
-        <el-form-item label="姓名" >
-          <el-input v-model="search2" placeholder="请输入姓名"  clearable>
+        <el-form-item label="Name" >
+          <el-input v-model="search2" placeholder="Please enter Name"  clearable>
             <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
           </el-input>
         </el-form-item >
-        <el-form-item label="电话号码" >
-          <el-input v-model="search3" placeholder="请输入电话号码"  clearable>
+        <el-form-item label="Phone number" >
+          <el-input v-model="search3" placeholder="Please enter Phone number"  clearable>
             <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
           </el-input>
         </el-form-item >
-        <el-form-item label="地址" >
-          <el-input v-model="search4" placeholder="请输入地址"  clearable>
+        <el-form-item label="Address" >
+          <el-input v-model="search4" placeholder="Please enter Address"  clearable>
             <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
           </el-input>
         </el-form-item >
         <el-form-item>
-      <el-button type="primary" style="margin-left: 1%" @click="load" size="mini">查询</el-button>
+      <el-button type="primary" style="margin-left: 1%" @click="load" size="mini">Search</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button size="mini"  type="danger" @click="clear">重置</el-button>
+          <el-button size="mini"  type="danger" @click="clear">Reset</el-button>
         </el-form-item>
       </el-form>
     </div>
     <!-- 按钮-->
     <div style="margin: 10px 0;" >
-<!--      <el-popconfirm title="确认禁用?" @confirm="deleteBatch" v-if="user.role == 1">-->
+<!--      <el-popconfirm title="Confirm ban?" @confirm="deleteBatch" v-if="user.role == 1">-->
 <!--        <template #reference>-->
-          <el-button type="primary" @click = "add" v-if="user.role == 1">添加管理员</el-button>
-<!--          <el-button type="danger" size="mini" >批量禁用</el-button>-->
+          <el-button type="primary" @click = "add" v-if="user.role == 1">Add Admin </el-button>
+<!--          <el-button type="danger" size="mini" >Multi ban</el-button>-->
 <!--        </template>-->
 <!--      </el-popconfirm>-->
     </div>
@@ -47,18 +47,18 @@
                        type="selection"
                        width="55">
       </el-table-column>
-      <el-table-column prop="id" label="管理员编号" sortable />
-      <el-table-column prop="username" label="用户名" />
-      <el-table-column prop="nickName" label="姓名" />
-      <el-table-column prop="phone" label="电话号码" />
-      <el-table-column prop="sex" label="性别" />
-      <el-table-column prop="address" label="地址" />
-      <el-table-column fixed="right" label="操作" >
+      <el-table-column prop="id" label="Admin id" sortable />
+      <el-table-column prop="username" label="Username" />
+      <el-table-column prop="nickName" label="Name" />
+      <el-table-column prop="phone" label="Phone number" />
+      <el-table-column prop="sex" label="Gender" />
+      <el-table-column prop="address" label="Address" />
+      <el-table-column fixed="right" label="Operation" >
         <template v-slot="scope">
-          <el-button  size="mini" @click ="handleEdit(scope.row)">审核/编辑</el-button>
-          <el-popconfirm title="确认禁用?" @confirm="handleDelete(scope.row.id)">
+          <el-button  size="mini" @click ="handleEdit(scope.row)">Process/Edit </el-button>
+          <el-popconfirm title="Confirm ban?" @confirm="handleDelete(scope.row.id)">
             <template #reference>
-              <el-button type="danger" size="mini" style="margin-top: 10px; margin-left: 50px">账号禁用</el-button>
+              <el-button type="danger" size="mini" style="margin-top: 10px; margin-left: 50px">Account ban</el-button>
             </template>
           </el-popconfirm>
         </template>
@@ -77,40 +77,40 @@
       >
       </el-pagination>
 
-      <el-dialog v-model="dialogVisible" title="编辑管理员信息" width="30%">
+      <el-dialog v-model="dialogVisible" title="Edit Admin info" width="30%">
         <el-form :model="form" label-width="120px">
-          <el-form-item label="用户名">
+          <el-form-item label="Username">
             <el-input style="width: 80%" v-model="form.username"></el-input>
           </el-form-item>
-          <el-form-item label="昵称">
+          <el-form-item label="Username">
             <el-input style="width: 80%" v-model="form.nickName"></el-input>
           </el-form-item>
-          <el-form-item label="电话号码">
+          <el-form-item label="Phone number">
             <el-input style="width: 80%" v-model="form.phone"></el-input>
           </el-form-item>
 
           <el-form-item label="role">
-            <el-radio v-model="form.role" label="3">读者</el-radio>
-            <el-radio v-model="form.role" label="2">管理员</el-radio>
+            <el-radio v-model="form.role" label="3">Reader</el-radio>
+            <el-radio v-model="form.role" label="2">Admin </el-radio>
           </el-form-item>
 
-          <el-form-item label="密码(默认123)">
+          <el-form-item label="Password(123 by default)">
             <el-input style="width: 80%" v-model="form.password"></el-input>
           </el-form-item>
-<!--          <el-form-item label="性别">-->
+<!--          <el-form-item label="Gender">-->
 <!--            <div>-->
 <!--              <el-radio v-model="form.sex" label="男">男</el-radio>-->
 <!--              <el-radio v-model="form.sex" label="女">女</el-radio>-->
 <!--            </div>-->
 <!--          </el-form-item>-->
-          <el-form-item label="地址">
+          <el-form-item label="Address">
             <el-input type="textarea" style="width: 80%" v-model="form.address"></el-input>
           </el-form-item>
         </el-form>
         <template #footer>
       <span class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="save">确 定</el-button>
+        <el-button @click="dialogVisible = false">Cancel</el-button>
+        <el-button type="primary" @click="save">Confirm</el-button>
       </span>
         </template>
       </el-dialog>
@@ -142,13 +142,13 @@ export default {
     },
     deleteBatch(){
       if (!this.ids.length) {
-        ElMessage.warning("请选择数据！")
+        ElMessage.warning("Please select data！")
         return
       }
-      //  一个小优化，直接发送这个数组，而不是一个一个的提交删除
+      //  一个小优化，直接发送这个数组，而不是一个一个的提交delete
       request.post("/user/deleteBatch",this.ids).then(res =>{
         if(res.code === '0'){
-          ElMessage.success("批量删除成功")
+          ElMessage.success("Multi delete success")
           this.load()
         }
         else {
@@ -184,7 +184,7 @@ export default {
       request.delete("user/" + id ).then(res =>{
         console.log(res)
         if(res.code == 0 ){
-          ElMessage.success("删除成功")
+          ElMessage.success("delete success")
         }
         else
           ElMessage.error(res.msg)
@@ -203,7 +203,7 @@ export default {
           console.log(res)
           if(res.code == 0){
             ElMessage({
-              message: '更新成功',
+              message: 'Update success',
               type: 'success',
             })
           }
@@ -211,7 +211,7 @@ export default {
             ElMessage.error(res.msg)
           }
 
-          this.load() //不知道为啥，更新必须要放在这里面
+          this.load() //不知道为啥，Update必须要放在这里面
           this.dialogVisible = false
         })
       }
@@ -219,7 +219,7 @@ export default {
         request.post("/user",this.form).then(res =>{
           console.log(res)
           if(res.code == 0){
-            ElMessage.success('添加成功')
+            ElMessage.success('Add success')
           }
           else {
             ElMessage.error(res.msg)
@@ -235,7 +235,7 @@ export default {
       request.put("user/" + id ).then(res =>{
         console.log(res)
         if(res.code == 0 ){
-          ElMessage.success("授权成功")
+          ElMessage.success("Authorise success")
         }
         else
           ElMessage.error(res.msg)

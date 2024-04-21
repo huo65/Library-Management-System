@@ -4,35 +4,35 @@
     <div style="margin: 10px 0;">
 
       <el-form inline="true" size="small" >
-        <el-form-item label="图书编号" >
-          <el-input v-model="search1" placeholder="请输入图书编号"  clearable>
+        <el-form-item label="Book id" >
+          <el-input v-model="search1" placeholder="Please enter Book id"  clearable>
             <template #prefix><el-icon class="el-input__icon"><search/></el-icon></template>
           </el-input>
         </el-form-item >
-        <el-form-item label="图书名称" >
-          <el-input v-model="search2" placeholder="请输入图书名称"  clearable>
+        <el-form-item label="Book name" >
+          <el-input v-model="search2" placeholder="Please enter Book name"  clearable>
             <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
           </el-input>
         </el-form-item >
 
-        <el-form-item label="借阅者" v-if="user.role == 1">
-          <el-input v-model="search3" placeholder="请输入借阅者昵称"  clearable>
+        <el-form-item label="Borrower" v-if="user.role == 1">
+          <el-input v-model="search3" placeholder="Please enter Borrower name"  clearable>
             <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
           </el-input>
         </el-form-item >
         <el-form-item>
-          <el-button type="primary" style="margin-left: 1%" @click="load" size="mini">查询</el-button>
+          <el-button type="primary" style="margin-left: 1%" @click="load" size="mini">Search</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button size="mini"  type="danger" @click="clear">重置</el-button>
+          <el-button size="mini"  type="danger" @click="clear">Reset</el-button>
         </el-form-item>
       </el-form>
     </div>
     <!-- 按钮-->
     <div style="margin: 10px 0;" >
-      <el-popconfirm title="确认归还?" @confirm="deleteBatch" v-if="user.role == 3">
+      <el-popconfirm title="Confirm return?" @confirm="deleteBatch" v-if="user.role == 3">
         <template #reference>
-          <el-button type="danger" size="mini" >批量归还</el-button>
+          <el-button type="danger" size="mini" >Multi return</el-button>
         </template>
       </el-popconfirm>
     </div>
@@ -42,23 +42,23 @@
           type="selection"
           width="55">
       </el-table-column>
-      <el-table-column prop="isbn" label="图书编号" sortable />
-      <el-table-column prop="bookName" label="图书名称" />
-      <el-table-column prop="nickName" label="借阅者" />
-      <el-table-column prop="lendtime" label="借阅时间" />
-      <el-table-column prop="deadtime" label="最迟归还日期" />
-      <el-table-column prop="prolong" label="可续借次数" />
-      <el-table-column fixed="right" label="操作" >
+      <el-table-column prop="isbn" label="Book id" sortable />
+      <el-table-column prop="bookName" label="Book name" />
+      <el-table-column prop="nickName" label="Borrower" />
+      <el-table-column prop="lendtime" label="Borrowing date" />
+      <el-table-column prop="deadtime" label="Latest return date" />
+      <el-table-column prop="prolong" label="Renewable time" />
+      <el-table-column fixed="right" label="Operation" >
         <template v-slot="scope">
-<!--          <el-button  size="mini" @click ="handleEdit(scope.row)" v-if="user.role == 1">修改</el-button>-->
-          <el-popconfirm title="确认归还?" @confirm="handleDelete(scope.row) " v-if="user.role == 3">
+<!--          <el-button  size="mini" @click ="handleEdit(scope.row)" v-if="user.role == 1">Modify </el-button>-->
+          <el-popconfirm title="Confirm return?" @confirm="handleDelete(scope.row) " v-if="user.role == 3">
             <template #reference>
-              <el-button type="danger" size="mini" >归还</el-button>
+              <el-button type="danger" size="mini" >return</el-button>
             </template>
           </el-popconfirm>
-          <el-popconfirm title="确认续借(续借一次延长30天)?" @confirm="handlereProlong(scope.row)" v-if="user.role == 3" :disabled="scope.row.prolong == 0">
+          <el-popconfirm title="Confirm renew(30 days)?" @confirm="handlereProlong(scope.row)" v-if="user.role == 3" :disabled="scope.row.prolong == 0">
             <template #reference>
-              <el-button type="danger" size="mini" :disabled="scope.row.prolong == 0" >续借</el-button>
+              <el-button type="danger" size="mini" :disabled="scope.row.prolong == 0" >renew</el-button>
             </template>
           </el-popconfirm>
         </template>
@@ -77,26 +77,26 @@
       >
       </el-pagination>
 
-      <el-dialog v-model="dialogVisible2" title="修改借阅信息" width="30%">
+      <el-dialog v-model="dialogVisible2" title="Modify borrowing info" width="30%">
         <el-form :model="form" label-width="120px">
 
-          <el-form-item label="图书编号">
+          <el-form-item label="Book id">
             <el-input style="width: 80%" v-model="form.isbn"></el-input>
           </el-form-item>
-          <el-form-item label="图书名称">
+          <el-form-item label="Book name">
             <el-input style="width: 80%" v-model="form.bookName"></el-input>
           </el-form-item>
-          <el-form-item label="借阅者">
+          <el-form-item label="Borrower">
             <el-input style="width: 80%" v-model="form.nickName"></el-input>
           </el-form-item>
-          <el-form-item label="续借次数">
+          <el-form-item label="renew次数">
             <el-input style="width: 80%" v-model="form.prolong"></el-input>
           </el-form-item>
         </el-form>
         <template #footer>
       <span class="dialog-footer">
-        <el-button @click="dialogVisible2 = false">取 消</el-button>
-        <el-button type="primary" @click="save">确 定</el-button>
+        <el-button @click="dialogVisible2 = false">Cancel</el-button>
+        <el-button type="primary" @click="save">Confirm</el-button>
       </span>
         </template>
       </el-dialog>
@@ -130,13 +130,13 @@ export default {
     },
     deleteBatch(){
       if (!this.forms.length) {
-        ElMessage.warning("请选择数据！")
+        ElMessage.warning("Please select data！")
         return
       }
-    //  一个小优化，直接发送这个数组，而不是一个一个的提交归还
+    //  一个小优化，直接发送这个数组，而不是一个一个的提交return
       request.post("bookwithuser/deleteRecords",this.forms).then(res =>{
         if(res.code === '0'){
-          ElMessage.success("批量归还成功")
+          ElMessage.success("Multi return success")
           this.load()
         }
         else {
@@ -187,7 +187,7 @@ export default {
       request.post("bookwithuser/deleteRecord",form3).then(res =>{
         console.log(res)
         if(res.code == 0 ){
-          ElMessage.success("归还成功")
+          ElMessage.success("return success")
         }
         else
           ElMessage.error(res.msg)
@@ -203,7 +203,7 @@ export default {
         console.log(res)
         if(res.code == 0){
           ElMessage({
-            message: '续借成功',
+            message: 'renew success',
             type: 'success',
           })
         }
@@ -222,7 +222,7 @@ export default {
           console.log(res)
           if(res.code == 0){
             ElMessage({
-              message: '修改信息成功',
+              message: 'Modify info success',
               type: 'success',
             })
           }

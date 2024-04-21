@@ -15,13 +15,13 @@
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#icondashboard "></use>
             </svg>
-            <span>主页</span>
+            <span>Home</span>
     </el-menu-item>
     <el-menu-item index="/dashboard" v-if="user.role == 1">
       <svg class="icon" aria-hidden="true">
         <use xlink:href="#icondashboard "></use>
       </svg>
-      <span>数据可视化</span>
+      <span>Dashboard</span>
     </el-menu-item>
 
     <el-sub-menu index="2" text-color="#fff">
@@ -29,50 +29,50 @@
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-mingpian "></use>
         </svg>
-        <span>个人信息</span>
+        <span>User</span>
       </template>
       <el-menu-item index="/person" style="font-color: white">
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-a-bianji1 "></use>
         </svg>
-        <span>修改个人信息</span>
+        <span>Profile</span>
       </el-menu-item>
       <el-menu-item index="/password">
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-mima "></use>
         </svg>
-        <span>修改密码</span>
+        <span>Change password</span>
       </el-menu-item>
     </el-sub-menu>
     <el-menu-item index="/userAdmin" v-if="user.role == 1">
       <svg class="icon" aria-hidden="true">
         <use xlink:href="#iconreader "></use>
       </svg>
-      <span>管理员管理</span>
+      <span>Manage admins</span>
     </el-menu-item>
     <el-menu-item index="/user" v-if="user.role == 2">
       <svg class="icon" aria-hidden="true">
         <use xlink:href="#iconreader "></use>
       </svg>
-      <span>读者管理</span>
+      <span>Manage readers</span>
     </el-menu-item>
     <el-menu-item index="/book" v-if="user.role == 2" >
       <svg class="icon" aria-hidden="true">
         <use xlink:href="#iconbook "></use>
       </svg>
-      <span>书籍管理</span>
+      <span>Manage books</span>
     </el-menu-item>
     <el-menu-item index="/book" v-if="user.role == 3">
       <svg class="icon" aria-hidden="true">
         <use xlink:href="#iconbook "></use>
       </svg>
-      <span>图书查询</span>
+      <span>Search books</span>
     </el-menu-item>
     <el-menu-item index="/lendrecord" v-if="user.role == 2">
       <svg class="icon" aria-hidden="true">
         <use xlink:href="#iconlend-record "></use>
       </svg>
-      <span>借阅记录</span>
+      <span>Lending record</span>
     </el-menu-item>
 <!--    <el-menu-item index="/lendrecord" v-if="user.role == 3">-->
 <!--      <svg class="icon" aria-hidden="true">-->
@@ -82,7 +82,7 @@
 <!--    </el-menu-item>-->
     <el-menu-item index="/bookwithuser" v-if="user.role == 3">
       <el-icon><grid /></el-icon>
-      <span>借阅历史</span>
+      <span>Borrowing record</span>
     </el-menu-item>
   </el-menu>
 
