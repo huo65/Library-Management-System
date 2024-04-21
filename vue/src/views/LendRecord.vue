@@ -4,8 +4,8 @@
     <!-- 搜索-->
     <div style="margin: 10px 0;">
       <el-form inline="true" size="small">
-        <el-form-item label="Book id">
-          <el-input v-model="search1" placeholder="Please enter Book id" clearable>
+        <el-form-item label="ISBN">
+          <el-input v-model="search1" placeholder="Please enter ISBN" clearable>
             <template #prefix>
               <el-icon class="el-input__icon">
                 <search/>
@@ -55,7 +55,7 @@
                        type="selection"
                        width="55">
       </el-table-column>
-      <el-table-column prop="isbn" label="Book id" sortable/>
+      <el-table-column prop="isbn" label="ISBN" sortable/>
       <el-table-column prop="bookname" label="Book name"/>
       <el-table-column prop="readerId" label="Reader id" sortable/>
       <el-table-column prop="lendTime" label="Borrowing date" sortable/>

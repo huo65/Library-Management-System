@@ -4,8 +4,8 @@
     <!-- 搜索-->
     <div style="margin: 10px 0;">
       <el-form inline="true" size="small">
-        <el-form-item label="Book id">
-          <el-input v-model="search1" placeholder="Please enter Book id" clearable>
+        <el-form-item label="ISBN">
+          <el-input v-model="search1" placeholder="Please enter ISBN" clearable>
             <template #prefix>
               <el-icon class="el-input__icon">
                 <search/>
@@ -71,7 +71,7 @@
                        type="selection"
                        width="55">
       </el-table-column>
-      <el-table-column prop="isbn" label="Book id" sortable/>
+      <el-table-column prop="isbn" label="ISBN" sortable/>
       <el-table-column prop="name" label="Book name"/>
       <el-table-column prop="price" label="Price" sortable/>
       <el-table-column prop="author" label="author"/>
@@ -95,7 +95,7 @@
               <el-button type="danger" size="mini">Take down</el-button>
             </template>
           </el-popconfirm>
-          <el-button size="mini" @click="handlelend(scope.row.id,scope.row.isbn,scope.row.name,scope.row.borrownum)"
+          <el-button size="mini" @click="handlelend(scope.row.id,scope.row.isbn,scope.row.name,scope.row.borrownum,scope.row.leftNumber)"
                      v-if="user.role == 3 " :disabled="scope.row.leftNumber == 0">borrow
           </el-button>
 <!--          <el-popconfirm title="Confirm Return?"-->
@@ -119,7 +119,7 @@
         :before-close="handleClose"
     >
       <el-table :data="outDateBook" style="width: 100%">
-        <el-table-column prop="isbn" label="Book id"/>
+        <el-table-column prop="isbn" label="ISBN"/>
         <el-table-column prop="bookName" label="Book name"/>
         <el-table-column prop="lendtime" label="Borrowing date"/>
         <el-table-column prop="deadtime" label="Latest return date"/>
@@ -148,7 +148,7 @@
       <el-dialog v-model="dialogVisible" title="Go onto book " width="30%">
         <el-form :model="form" label-width="120px">
 
-          <el-form-item label="Book id">
+          <el-form-item label="ISBN">
             <el-input style="width: 80%" v-model="form.isbn"></el-input>
           </el-form-item>
           <el-form-item label="Book name">
@@ -181,7 +181,7 @@
       <el-dialog v-model="dialogVisible2" title="Modify book info" width="30%">
         <el-form :model="form" label-width="120px">
 
-          <el-form-item label="Book id">
+          <el-form-item label="ISBN">
             <el-input style="width: 80%" v-model="form.isbn"></el-input>
           </el-form-item>
           <el-form-item label="Book name">
@@ -367,7 +367,7 @@ export default {
         //
       })
     },
-    handlelend(id, isbn, name, bn) {
+    handlelend(id, isbn, name, bn,leftNumber) {
 
       if (this.phone == null) {
         ElMessage.error("Borrow failed! Please complete your user profile!")
@@ -395,6 +395,7 @@ export default {
       this.form.status = "0"
       this.form.id = id
       this.form.borrownum = bn + 1
+      this.form.leftNumber = leftNumber - 1
       console.log(bn)
       request.put("/book", this.form).then(res => {
         console.log(res)
