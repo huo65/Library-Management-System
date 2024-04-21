@@ -1,35 +1,35 @@
 <template>
   <div>
-    <el-card style="width: 40%; margin-left: 120px; margin-top: 40px" >
-        <h2 style="padding: 30px">个人信息</h2>
-      <el-form :model="form" ref="form" label-width="80px">
-        <el-form-item label="用户名">
+    <el-card style="width: 60%; margin-left: 120px; margin-top: 40px" >
+        <h2 style="padding: 30px">User profile</h2>
+      <el-form :model="form" ref="form" label-width="160px">
+        <el-form-item label="Username">
           <el-input style="width: 80%" v-model="form.username" disabled></el-input>
         </el-form-item>
-        <el-form-item label="姓名">
+        <el-form-item label="Name">
           <el-input style="width: 80%" v-model="form.nickName"></el-input>
         </el-form-item>
-        <el-form-item label="权限">
-            <span v-if="form.role==1" style="margin:5px">系统管理员</span>
-            <span v-if="form.role==2" style="margin:5px">管理员</span>
-            <span v-if="form.role==3" style="margin:5px">读者</span>
+        <el-form-item label="Privilege">
+            <span v-if="form.role==1" style="margin:5px">System admin</span>
+            <span v-if="form.role==2" style="margin:5px">admin</span>
+            <span v-if="form.role==3" style="margin:5px">Reader</span>
         </el-form-item>
-        <el-form-item label="电话号码">
+        <el-form-item label="Phone number">
           <el-input style="width: 40%" v-model="form.phone"></el-input>
-          <el-tag type="danger" style="margin-left: 20px">如果修改了手机号请先重新登录再使用</el-tag>
+          <el-tag type="danger" style="margin-left: 20px">Please login again after changing phone number</el-tag>
         </el-form-item>
-        <el-form-item label="性别">
+        <el-form-item label="Gender">
           <div>
-            <el-radio v-model="form.sex" label="男">男</el-radio>
-            <el-radio v-model="form.sex" label="女">女</el-radio>
+            <el-radio v-model="form.sex" label="Male">Male</el-radio>
+            <el-radio v-model="form.sex" label="Female">Female</el-radio>
           </div>
         </el-form-item>
-        <el-form-item label="地址">
+        <el-form-item label="Address">
           <el-input type="textarea" style="width: 80%" v-model="form.address"></el-input>
         </el-form-item>
       </el-form>
       <div style="text-align: center">
-        <el-button type="primary" @click="update">保存</el-button>
+        <el-button type="primary" @click="update">Save</el-button>
       </div>
     </el-card>
   </div>
@@ -61,7 +61,7 @@ export default {
       request.put("/user/update", this.form).then(res => {
         console.log(res)
         if (res.code === '0') {
-          ElMessage.success("更新成功")
+          ElMessage.success("Update success")
           sessionStorage.setItem("user", JSON.stringify(this.form))
           // 触发Layout更新用户信息
           this.$emit("userInfo")

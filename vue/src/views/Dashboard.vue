@@ -29,10 +29,10 @@ export default {
   data() {
     return {
       cards: [
-        { title: '已借阅', data: 100, icon: '#iconlend-record-pro' },
-        { title: '总访问', data: 100, icon: '#iconvisit'   },
-        { title: '图书数', data: 100, icon: '#iconbook-pro' },
-        { title: '用户数', data: 1000, icon: '#iconpopulation' }
+        { title: 'Total lending', data: 100, icon: '#iconlend-record-pro' },
+        { title: 'Total visits', data: 100, icon: '#iconvisit'   },
+        { title: 'Total books', data: 100, icon: '#iconbook-pro' },
+        { title: 'Total users', data: 1000, icon: '#iconpopulation' }
       ],
       data:{}
     }

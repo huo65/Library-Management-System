@@ -1,15 +1,15 @@
 <template xmlns="http://www.w3.org/1999/html">
   <div>
-    <el-card style="width: 40%; margin-left: 120px; margin-top: 40px" >
+    <el-card style="width: 60%; margin-left: 120px; margin-top: 40px" >
       <el-form
           ref="form"
           :model="form"
           status-icon
           :rules="rules"
-          label-width="100px"
+          label-width="200px"
           class="demo-ruleForm"
       >
-        <el-form-item label="验证码" prop="code">
+        <el-form-item label="Verification code" prop="code">
           <el-input
               v-model="form2.code"
               type="code"
@@ -18,14 +18,14 @@
           ></el-input>
           <el-button type="success" plain  style="margin-left: 20px" @click="getcode" :disabled="isDisabled">{{buttonName}}</el-button>
         </el-form-item>
-        <el-form-item label="新密码" prop="password">
+        <el-form-item label="New password" prop="password">
           <el-input
               v-model="form2.password"
               type="password"
               autocomplete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item label="确认新密码" prop="checkpassword">
+        <el-form-item label="Confirm new password" prop="checkpassword">
           <el-input
               v-model="form.checkpassword"
               type="password"
@@ -33,8 +33,8 @@
           ></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm" style="text-align: center;margin-left: 120px">提交</el-button>
-          <el-button @click="resetForm('form')" style="text-align: center;margin-left: 20px">重置</el-button>
+          <el-button type="primary" @click="submitForm" style="text-align: center;margin-left: 120px">Submit</el-button>
+          <el-button @click="resetForm('form')" style="text-align: center;margin-left: 20px">Reset</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -52,23 +52,23 @@ export default {
 
     const validatePass = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入新密码'))
+        callback(new Error('Please enter new password'))
       } else {
         callback()
       }
     }
     const validatePass3 = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请再次输入密码'))
+        callback(new Error('Please confirm new password'))
       } else if (value !== this.form2.password) {
-        callback(new Error("两次输入密码不匹配"))
+        callback(new Error("Password confirmation doesn't match"))
       } else {
         callback()
       }
     }
     return {
 
-      buttonName: "获取短信验证码",
+      buttonName: "Get from SMS",
       isDisabled: false,
       time: 60,
 
@@ -104,7 +104,7 @@ export default {
     getcode(){
 
       if (this.phone == null){
-        ElMessage.error("获取失败! 请先将个人信息补充完整")
+        ElMessage.error("Couldn't get! Please complete your user profile")
         this.$router.push("/person")//跳转个人信息界面
         return;
       }
@@ -112,10 +112,10 @@ export default {
       let me = this;
       me.isDisabled = true;
       let interval = window.setInterval(function() {
-        me.buttonName = '（' + me.time + '秒）后重新发送';
+        me.buttonName = 'Resend after （' + me.time + 'seconds）';
         --me.time;
         if(me.time < 0) {
-          me.buttonName = "重新发送";
+          me.buttonName = "Resend";
           me.time = 60;
           me.isDisabled = false;
           window.clearInterval(interval);
@@ -127,7 +127,7 @@ export default {
         }
       }).then(res=>{
         if (res.code == 0) {
-          ElMessage.success("验证码发送成功")
+          ElMessage.success("Send success")
         } else {
           ElMessage.error(res.msg)
         }
@@ -139,7 +139,7 @@ export default {
 
           request.put("/user", this.form2).then(res => {
             if (res.code == 0) {
-              ElMessage.success("密码修改成功,请重新登录")
+              ElMessage.success("Password change success, please login again")
               sessionStorage.removeItem("user")//清空缓存的用户信息
               this.$router.push("/login")//跳转登录界面
             } else {
