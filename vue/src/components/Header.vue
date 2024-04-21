@@ -30,7 +30,7 @@ export default {
   data(){
     return{
       user:[],
-      imgUrl:require("../assets/icon/login.png")
+      imgUrl:require("../assets/icon/logo.svg")
     }
   },
   created(){
