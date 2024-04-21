@@ -4,8 +4,8 @@
     <div style="margin: 10px 0;">
 
       <el-form inline="true" size="small" >
-        <el-form-item label="Book id" >
-          <el-input v-model="search1" placeholder="Please enter Book id"  clearable>
+        <el-form-item label="ISBN" >
+          <el-input v-model="search1" placeholder="Please enter ISBN"  clearable>
             <template #prefix><el-icon class="el-input__icon"><search/></el-icon></template>
           </el-input>
         </el-form-item >
@@ -42,7 +42,7 @@
           type="selection"
           width="55">
       </el-table-column>
-      <el-table-column prop="isbn" label="Book id" sortable />
+      <el-table-column prop="isbn" label="ISBN" sortable />
       <el-table-column prop="bookName" label="Book name" />
       <el-table-column prop="nickName" label="Borrower" />
       <el-table-column prop="lendtime" label="Borrowing date" />
@@ -80,7 +80,7 @@
       <el-dialog v-model="dialogVisible2" title="Modify borrowing info" width="30%">
         <el-form :model="form" label-width="120px">
 
-          <el-form-item label="Book id">
+          <el-form-item label="ISBN">
             <el-input style="width: 80%" v-model="form.isbn"></el-input>
           </el-form-item>
           <el-form-item label="Book name">
