@@ -14,9 +14,9 @@
             <span v-if="form.role==2" style="margin:5px">admin</span>
             <span v-if="form.role==3" style="margin:5px">Reader</span>
         </el-form-item>
-        <el-form-item label="Phone number">
+        <el-form-item label="Email">
           <el-input style="width: 40%" v-model="form.phone"></el-input>
-          <el-tag type="danger" style="margin-left: 20px">Please login again after changing phone number</el-tag>
+          <el-tag type="danger" style="margin-left: 20px">Please login again after changing Email</el-tag>
         </el-form-item>
         <el-form-item label="Gender">
           <div>
