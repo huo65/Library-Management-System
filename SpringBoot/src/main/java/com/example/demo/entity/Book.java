@@ -26,8 +26,8 @@ public class Book {
     private Date createTime;
     private String status;
     private String location;
-//    private Integer leftNumber;
-//    private Integer totalNumber;
+    private Integer leftNumber;
+    private Integer totalNumber;
 
 
 }
