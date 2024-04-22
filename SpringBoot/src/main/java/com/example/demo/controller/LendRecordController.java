@@ -6,8 +6,13 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.commom.Result;
+import com.example.demo.entity.Book;
+import com.example.demo.entity.BookWithUser;
 import com.example.demo.entity.LendRecord;
+import com.example.demo.mapper.BookMapper;
+import com.example.demo.mapper.BookWithUserMapper;
 import com.example.demo.mapper.LendRecordMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -18,9 +23,16 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/LendRecord")
+@Slf4j
 public class LendRecordController {
     @Resource
     LendRecordMapper LendRecordMapper;
+
+    @Resource
+    BookWithUserMapper bookWithUserMapper;
+
+    @Resource
+    BookMapper bookMapper;
 
     @DeleteMapping("/{isbn}")
     public Result<?> delete(@PathVariable String isbn){
@@ -29,23 +41,45 @@ public class LendRecordController {
         LendRecordMapper.deleteByMap(map);
         return Result.success();
     }
-    //删除一条记录
+    //删除一条记录(no 是还书
     @PostMapping("/deleteRecord")
-    public  Result<?> deleteRecord(@RequestBody LendRecord LendRecord){
-        Map<String,Object> map = new HashMap<>();
-        map.put("isbn",LendRecord.getIsbn());
-        map.put("borrownum",LendRecord.getBorrownum());
-        LendRecordMapper.deleteByMap(map);
+    public  Result<?> deleteRecord(@RequestBody LendRecord lendRecord){
+//        Map<String,Object> map = new HashMap<>();
+//        map.put("isbn",LendRecord.getIsbn());
+//        map.put("lend_time",LendRecord.getBorrownum());
+//        log.info("###########接收参数："+map+"#####################");
+//        LendRecordMapper.deleteByMap(map);
+        log.info("########################接受参数"+lendRecord);
+        LambdaQueryWrapper<LendRecord> lendRecordLambdaQueryWrapper = Wrappers.lambdaQuery();
+        lendRecordLambdaQueryWrapper.eq(LendRecord::getIsbn,lendRecord.getIsbn());
+        lendRecordLambdaQueryWrapper.eq(LendRecord::getReaderId,lendRecord.getReaderId());
+        lendRecordLambdaQueryWrapper.eq(LendRecord::getLendTime,lendRecord.getLendTime());
+        LendRecord record = LendRecordMapper.selectOne(lendRecordLambdaQueryWrapper);
+        lendRecord.setStatus("1");
+        LendRecordMapper.updateById(lendRecord);
+
+        LambdaQueryWrapper<BookWithUser> bUwrapper = Wrappers.lambdaQuery();
+        bUwrapper.eq(BookWithUser::getIsbn,lendRecord.getIsbn());
+        bUwrapper.eq(BookWithUser::getLendtime,lendRecord.getLendTime());
+        BookWithUser bU = bookWithUserMapper.selectOne(bUwrapper);
+        bU.setStatus(1);
+        bookWithUserMapper.updateById(bU);
+
+        LambdaQueryWrapper<Book> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(Book::getIsbn,lendRecord.getIsbn());
+        Book book = bookMapper.selectOne(wrapper);
+        book.setLeftNumber(book.getLeftNumber()+1);
+        bookMapper.updateById(book);
         return Result.success();
     }
     @PostMapping("/deleteRecords")
     public Result<?> deleteRecords(@RequestBody List<LendRecord> LendRecords){
-        for (LendRecord curRecord : LendRecords) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("isbn", curRecord.getIsbn());
-            map.put("borrownum", curRecord.getBorrownum());
-            LendRecordMapper.deleteByMap(map);
-        }
+//        for (LendRecord curRecord : LendRecords) {
+//            Map<String, Object> map = new HashMap<>();
+//            map.put("isbn", curRecord.getIsbn());
+//            map.put("borrownum", curRecord.getBorrownum());
+//            LendRecordMapper.deleteByMap(map);
+//        }
         return Result.success();
     }
     @PostMapping
@@ -95,5 +129,37 @@ public class LendRecordController {
         LendRecordMapper.update(lendrecord, updateWrapper);
         return Result.success();
     }
+    @PutMapping
+    public  Result<?> update(@RequestBody LendRecord lendRecord){
+        log.info("########################接受参数"+lendRecord);
+        LendRecordMapper.updateById(lendRecord);
+        if (lendRecord.getStatus() .equals("1")) {
+            LambdaQueryWrapper<BookWithUser> bUwrapper = Wrappers.lambdaQuery();
+            bUwrapper.eq(BookWithUser::getIsbn, lendRecord.getIsbn());
+            bUwrapper.eq(BookWithUser::getLendtime, lendRecord.getLendTime());
+            BookWithUser bU = bookWithUserMapper.selectOne(bUwrapper);
+            bU.setStatus(1);
+            bookWithUserMapper.updateById(bU);
 
+            LambdaQueryWrapper<Book> wrapper = Wrappers.lambdaQuery();
+            wrapper.eq(Book::getIsbn, lendRecord.getIsbn());
+            Book book = bookMapper.selectOne(wrapper);
+            book.setLeftNumber(book.getLeftNumber() + 1);
+            bookMapper.updateById(book);
+        }else{
+            LambdaQueryWrapper<BookWithUser> bUwrapper = Wrappers.lambdaQuery();
+            bUwrapper.eq(BookWithUser::getIsbn, lendRecord.getIsbn());
+            bUwrapper.eq(BookWithUser::getLendtime, lendRecord.getLendTime());
+            BookWithUser bU = bookWithUserMapper.selectOne(bUwrapper);
+            bU.setStatus(0);
+            bookWithUserMapper.updateById(bU);
+
+            LambdaQueryWrapper<Book> wrapper = Wrappers.lambdaQuery();
+            wrapper.eq(Book::getIsbn, lendRecord.getIsbn());
+            Book book = bookMapper.selectOne(wrapper);
+            book.setLeftNumber(book.getLeftNumber() - 1);
+            bookMapper.updateById(book);
+        }
+        return Result.success();
+    }
 }
