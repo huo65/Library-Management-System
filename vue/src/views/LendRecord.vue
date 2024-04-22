@@ -41,20 +41,20 @@
     </div>
 
     <!--按钮-->
-    <div style="margin: 10px 0;" v-if="user.role == 2">
-      <el-popconfirm title="Confirm delete?" @confirm="deleteBatch">
-        <template #reference>
-          <el-button type="danger" size="mini">Multi delete</el-button>
-        </template>
-      </el-popconfirm>
-    </div>
+<!--    <div style="margin: 10px 0;" v-if="user.role == 2">-->
+<!--      <el-popconfirm title="Confirm delete?" @confirm="deleteBatch">-->
+<!--        <template #reference>-->
+<!--          <el-button type="danger" size="mini">Multi delete</el-button>-->
+<!--        </template>-->
+<!--      </el-popconfirm>-->
+<!--    </div>-->
     <!-- 数据字段-->
 
     <el-table :data="tableData" stripe border="true" @selection-change="handleSelectionChange">
-      <el-table-column v-if="user.role ==1"
-                       type="selection"
-                       width="55">
-      </el-table-column>
+<!--      <el-table-column v-if="user.role ==1"-->
+<!--                       type="selection"-->
+<!--                       width="55">-->
+<!--      </el-table-column>-->
       <el-table-column prop="isbn" label="ISBN" sortable/>
       <el-table-column prop="bookname" label="Book name"/>
       <el-table-column prop="readerId" label="Reader id" sortable/>
@@ -71,7 +71,7 @@
           <el-button size="mini" @click="handleEdit(scope.row)">Edit</el-button>
           <el-popconfirm title="Confirm delete?" @confirm="handleDelete(scope.row)">
             <template #reference>
-              <el-button type="danger" size="mini">delete record</el-button>
+              <el-button type="danger" size="mini">return</el-button>
             </template>
           </el-popconfirm>
         </template>
@@ -112,7 +112,7 @@
             </el-date-picker>
 
           </el-form-item>
-          <el-form-item label="Returning status" prop="status">
+          <el-form-item label="Returningstatus" prop="status">
             <el-radio v-model="form.status" label="0">Not returned</el-radio>
             <el-radio v-model="form.status" label="1">Returned</el-radio>
           </el-form-item>
@@ -120,7 +120,7 @@
         <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="save(form.isbn)">Confirm</el-button>
+        <el-button type="primary" @click="save(form)">Confirm</el-button>
       </span>
         </template>
       </el-dialog>
@@ -181,27 +181,8 @@ export default defineComponent({
         this.total = res.data.total
       })
     },
-    save(isbn) {
-      //ES6语法
-      //地址,但是？IP与端口？+请求参数
-      // this.form?这是自动保存在form中的，虽然显示时没有使用，但是这个对象中是有它的
-      if (this.form.isbn) {
-        request.post("/LendRecord" + isbn, this.form).then(res => {
-          console.log(res)
-          if (res.code == 0) {
-            ElMessage({
-              message: 'add success',
-              type: 'success',
-            })
-          } else {
-            ElMessage.error(res.msg)
-          }
-
-          this.load() //不知道为啥，更新必须要放在这里面
-          this.dialogVisible = false
-        })
-      } else {
-        request.put("/LendRecord/" + isbn, this.form).then(res => {
+    save(form) {
+        request.put("/LendRecord/" , this.form).then(res => {
           console.log(res)
           if (res.code == 0) {
             ElMessage({
@@ -215,8 +196,6 @@ export default defineComponent({
           this.load() //不知道为啥，更新必须要放在这里面
           this.dialogVisible2 = false
         })
-      }
-
     },
     clear() {
       this.search1 = ""

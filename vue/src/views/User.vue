@@ -84,7 +84,7 @@
           <el-form-item label="Username">
             <el-input style="width: 80%" v-model="form.username"></el-input>
           </el-form-item>
-          <el-form-item label="Username">
+          <el-form-item label="NickName">
             <el-input style="width: 80%" v-model="form.nickName"></el-input>
           </el-form-item>
           <el-form-item label="Phone number">

@@ -56,15 +56,14 @@ npm build      # 打包前端项目(dist)部署
 
 2.启动本地redis服务(window或者docker部署，可选)
 
-3.添加阿里云短信服务Key和pwd（可选）
+3.运行springboot启动类
 
-4.运行springboot启动类
 
-5.当报错显示阿里云短信请求不存在时，请查看Issues解决问题 [点击这里](https://github.com/wzunjh/Library-Management-System/issues/1)
 
-### 部分页面展示
-| ![输入图片说明](vue/public/%E5%9B%BE%E7%89%873.png)  | ![输入图片说明](vue/public/%E5%9B%BE%E7%89%876.png)  | ![输入图片说明](vue/public/%E5%9B%BE%E7%89%87.png)  |
-|---|---|---|
-| ![输入图片说明](vue/public/%E5%9B%BE%E7%89%871.png)  |  ![输入图片说明](vue/public/%E5%9B%BE%E7%89%872.png) | ![输入图片说明](vue/public/%E5%9B%BE%E7%89%878.png)  |
-|   | ![输入图片说明](vue/public/%E5%9B%BE%E7%89%879.png)  |   |
+# 测试
 
+逾期用户：overdue 密码123
+
+管理员：admin 密码 123
+
+系统管理员： SysAdmin 密码123
