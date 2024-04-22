@@ -54,13 +54,15 @@
       <el-table-column prop="phone" label="Phone number" />
       <el-table-column prop="sex" label="Gender" />
       <el-table-column prop="address" label="Address" />
+<!--      <el-table-column prop="alow" label="权限" />-->
       <el-table-column fixed="right" label="Operation" >
         <template v-slot="scope">
-          <el-button  size="mini" @click ="handleEdit(scope.row)">Process/Edit </el-button>
-          <el-button  size="mini" @click ="handleAlow(scope.row.id)" style="margin-left: 10px" type="success" v-if="user.role ==2">Permit borrowing</el-button>
-          <el-popconfirm title="Confirm ban?" @confirm="handleDelete(scope.row.id)">
+          <el-button  size="mini" @click ="handleEdit(scope.row)">Edit </el-button>
+          <el-button  size="mini" @click ="handleAlow(scope.row.id)" style="margin-left: 10px" type="success" v-if="scope.row.alow ==='0' ">Permit borrow</el-button>
+<!--          <el-button  size="mini" @click ="handleAlow(scope.row.id)" style="margin-left: 10px" type="danger" v-if="scope.row.alow ==='0' ">Permit borrow</el-button>-->
+          <el-popconfirm title="Confirm ban?" @confirm="handleAlow(scope.row.id)" v-else>
             <template #reference>
-              <el-button type="danger" size="mini" style="margin-top: 10px; margin-left: 50px">Account ban</el-button>
+              <el-button type="danger" size="mini">Permit ban</el-button>
             </template>
           </el-popconfirm>
         </template>
