@@ -215,10 +215,6 @@ export default {
         else
           ElMessage.error(res.msg)
 
-        // todo book handlereturn
-        //     this.form3.isbn = isbn
-        // this.form3.readerId = this.user.id
-
         this.load()
       })
     },
