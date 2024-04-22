@@ -281,6 +281,7 @@ export default {
             search3: this.user.id,
           }
         }).then(res => {
+          // TODO 判断过期逻辑
           console.log(res)
           this.bookData = res.data.records
           this.number = this.bookData.length;
@@ -375,7 +376,7 @@ export default {
         return;
       }
 
-      if (this.number == 5) {
+      if (this.number == 50) {
         ElMessage.warning("You can't borrow more books")
         return;
       }
@@ -428,7 +429,7 @@ export default {
       form3.isbn = isbn;
       form3.bookName = name;
       form3.nickName = this.user.username;
-      form3.id = this.user.id;
+      form3.readerId = this.user.id;
       form3.lendtime = startDate;
       let nowDate = new Date(startDate);
       nowDate.setDate(nowDate.getDate() + 30);
