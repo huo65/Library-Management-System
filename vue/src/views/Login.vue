@@ -1,6 +1,6 @@
 <template>
 <div  class="login-container"  >
-  
+
     <el-form ref="form" :model="form"   :rules="rules" class="login-page">
       <h2 class="title" style="margin-bottom: 20px;text-align: center">Login</h2>
       <el-form-item prop="username" >
@@ -108,7 +108,7 @@ export default {
   position: fixed;
   width: 100%;
   height: 100vh;
-  background: url('../img/bg3.jpg');
+  background: url('../img/lib.jpg');
   background-size: cover;
   overflow: hidden;
 }
@@ -120,7 +120,7 @@ export default {
   padding: 0 50px;
   border: 1px solid #eaeaea;
   background-color: #fff;
-  box-shadow: 0 5px 25px rgba(0,0,0,0.25); 
+  box-shadow: 0 5px 25px rgba(0,0,0,0.25);
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
