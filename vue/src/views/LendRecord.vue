@@ -60,7 +60,7 @@
       <el-table-column prop="readerId" label="Reader id" sortable/>
       <el-table-column prop="lendTime" label="Borrowing date" sortable/>
       <el-table-column prop="returnTime" label="Returning date" sortable/>
-      <el-table-column prop="status" label="状态">
+      <el-table-column prop="status" label="Status">
         <template v-slot="scope">
           <el-tag v-if="scope.row.status == 0" type="warning">Not returned</el-tag>
           <el-tag v-else type="success">Returned</el-tag>

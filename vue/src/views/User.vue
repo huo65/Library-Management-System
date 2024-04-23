@@ -92,7 +92,7 @@
           <el-form-item label="Phone number">
             <el-input style="width: 80%" v-model="form.phone"></el-input>
           </el-form-item>
-          <el-form-item label="密码(默认123)">
+          <el-form-item label="password">
             <el-input style="width: 80%" v-model="form.password"></el-input>
           </el-form-item>
 
