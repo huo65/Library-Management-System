@@ -14,8 +14,8 @@
             <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
           </el-input>
         </el-form-item >
-        <el-form-item label="Email" >
-          <el-input v-model="search3" placeholder="Please enter Email"  clearable>
+        <el-form-item label="Phone number" >
+          <el-input v-model="search3" placeholder="Please enter Phone number"  clearable>
             <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
           </el-input>
         </el-form-item >
@@ -51,7 +51,7 @@
       <el-table-column prop="id" label="Reader id" sortable />
       <el-table-column prop="username" label="Username" />
       <el-table-column prop="nickName" label="Name" />
-      <el-table-column prop="phone" label="Email" />
+      <el-table-column prop="phone" label="Phone number" />
       <el-table-column prop="sex" label="Gender" />
       <el-table-column prop="address" label="Address" />
 <!--      <el-table-column prop="alow" label="权限" />-->
@@ -89,10 +89,10 @@
           <el-form-item label="NickName">
             <el-input style="width: 80%" v-model="form.nickName"></el-input>
           </el-form-item>
-          <el-form-item label="Email">
+          <el-form-item label="Phone number">
             <el-input style="width: 80%" v-model="form.phone"></el-input>
           </el-form-item>
-          <el-form-item label="密码(default123)">
+          <el-form-item label="password">
             <el-input style="width: 80%" v-model="form.password"></el-input>
           </el-form-item>
 

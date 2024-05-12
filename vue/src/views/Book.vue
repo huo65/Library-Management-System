@@ -76,7 +76,8 @@
       <el-table-column prop="price" label="Price" sortable/>
       <el-table-column prop="author" label="author"/>
       <el-table-column prop="publisher" label="Publisher"/>
-      <el-table-column prop="createTime" label="Date of publication" sortable/>
+<!--      <el-table-column prop="createTime" label="Date of publication" sortable/>-->
+      <el-table-column prop="location" label="Location"/>
       <el-table-column prop="borrownum" label="Borrowed time" sortable v-if="user.role == 2"/>
 
 <!--      <el-table-column prop="leftNumber" label="leftNumber">-->
@@ -162,6 +163,9 @@
           </el-form-item>
           <el-form-item label="Publisher">
             <el-input style="width: 80%" v-model="form.publisher"></el-input>
+          </el-form-item>
+          <el-form-item label="location">
+            <el-input style="width: 80%" v-model="form.location"></el-input>
           </el-form-item>
           <el-form-item label="Date of publication">
             <div>
