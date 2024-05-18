@@ -306,6 +306,7 @@ export default {
           console.log("in load():" + this.numOfOutDataBook);
         })
       }
+      //判断是否具有borrow权力
       request.get("/user/alow/" + this.user.id).then(res => {
         if (res.code == 0) {
           this.flag = true
@@ -313,7 +314,6 @@ export default {
           this.flag = false
         }
       })
-      //判断是否具有borrow权力
     },
     clear() {
       this.search1 = ""
@@ -384,6 +384,7 @@ export default {
         ElMessage.warning("You can't borrow more books")
         return;
       }
+      // 未还书权限限制
       if (this.numOfOutDataBook != 0) {
         ElMessage.warning("You can't borrow more books before returning overdue books")
         return;
