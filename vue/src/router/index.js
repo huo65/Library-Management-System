@@ -52,7 +52,12 @@ const routes = [
         path: 'bookwithuser',
         name: 'BookWithUser',
         component: () => import("@/views/BookWithUser")
-      }
+      },
+      {
+        path: 'fine',
+        name: 'Fine',
+        component: () => import("@/views/Fine.vue")
+      },
     ]
   },
   {

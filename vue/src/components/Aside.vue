@@ -84,6 +84,11 @@
       <el-icon><grid /></el-icon>
       <span>Borrowing record</span>
     </el-menu-item>
+
+    <el-menu-item index="/fine" v-if="user.role == 3">
+      <el-icon><bell /></el-icon>
+      <span>Fine</span>
+    </el-menu-item>
   </el-menu>
 
 </div>
@@ -93,9 +98,11 @@
 
 
 
+import {Bell} from "@element-plus/icons";
+
 export default {
   name: "Aside",
-  components:{},
+  components:{Bell},
   created(){
     let userStr = sessionStorage.getItem("user") ||"{}"
     this.user = JSON.parse(userStr)
