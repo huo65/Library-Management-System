@@ -18,9 +18,7 @@
             <span>Home</span>
     </el-menu-item>
     <el-menu-item index="/dashboard" v-if="user.role == 1">
-      <svg class="icon" aria-hidden="true">
-        <use xlink:href="#icondashboard "></use>
-      </svg>
+      <el-icon><Message /></el-icon>
       <span>Dashboard</span>
     </el-menu-item>
 
