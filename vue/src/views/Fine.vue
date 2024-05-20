@@ -158,8 +158,9 @@ export default {
       this.search3 = ""
       this.load()
     },
-    handlePay(){
-      window.open('http://localhost:8090/alipay/pay?subject=%E4%B8%9C%E5%8C%97%E8%8F%9C&traceNo=1&totalAmount=100');
+    handlePay(row){
+      // window.open('http://localhost:8090/alipay/pay?subject=%E4%B8%9C%E5%8C%97%E8%8F%9C&traceNo=1&totalAmount=100');
+      window.open("http://localhost:8090/alipay/pay?subject="+"B5Lib"+"&traceNo="+row.id+"&totalAmount="+row.number,'_self')
     },
     save(){
       //ES6语法
