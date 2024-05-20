@@ -39,6 +39,13 @@ public class Fine implements Serializable {
      * 冗余存储读者姓名
      */
     private String readername;
+    /**
+     * 冗余存储书名
+     */
+    private String bookname;
+
+    private Integer status;
+
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

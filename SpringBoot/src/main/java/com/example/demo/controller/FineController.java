@@ -53,13 +53,20 @@ public class FineController {
                               @RequestParam(defaultValue = "10") Integer pageSize,
                               @RequestParam(defaultValue = "") String search1,
                               @RequestParam(defaultValue = "") String search2,
-                              @RequestParam(defaultValue = "") String search3){
+                              @RequestParam(defaultValue = "") String search3,
+                              @RequestParam(defaultValue = "") String search4){
         LambdaQueryWrapper<Fine> wrappers = Wrappers.<Fine>lambdaQuery();
         if(StringUtils.isNotBlank(search1)){
             wrappers.like(Fine::getIsbn,search1);
         }
         if(StringUtils.isNotBlank(search2)){
-            wrappers.like(Fine::getReadername,search2);
+            wrappers.like(Fine::getBookname,search2);
+        }
+        if(StringUtils.isNotBlank(search3)){
+            wrappers.like(Fine::getReaderid,search3);
+        }
+        if(StringUtils.isNotBlank(search4)){
+            wrappers.like(Fine::getReadername,search4);
         }
 
         Page<Fine> FinePage =fineMapper.selectPage(new Page<>(pageNum,pageSize), wrappers);

@@ -309,6 +309,7 @@ export default {
             fineForm[i] = {
               // id: 100,
               isbn : this.outDateBook[i].isbn,
+              bookname:this.outDateBook[i].bookname,
               readerid : this.user.id,
               readername : this.user.username,
               number : 10
