@@ -63,17 +63,38 @@
       <el-table-column prop="status" label="Status">
         <template v-slot="scope">
           <el-tag v-if="scope.row.status == 0" type="warning">Not returned</el-tag>
+          <el-tag v-else-if="scope.row.status == 2" type="info">Apply Return</el-tag>
           <el-tag v-else type="success">Returned</el-tag>
         </template>
       </el-table-column>
       <el-table-column v-if="user.role === 2" label="Operation" width="230px">
         <template v-slot="scope">
           <el-button size="mini" @click="handleEdit(scope.row)">Edit</el-button>
-          <el-popconfirm title="Confirm delete?" @confirm="handleDelete(scope.row)">
-            <template #reference>
-              <el-button type="danger" size="mini">return</el-button>
-            </template>
-          </el-popconfirm>
+
+          <!-- 直接根据status显示不同按钮 -->
+          <el-button
+              v-if="scope.row.status == 0"
+              type="danger"
+              size="mini"
+              @click="handleDelete(scope.row)">
+            Return
+          </el-button>
+
+          <el-button
+              v-else-if="scope.row.status == 1"
+              type="default"
+              size="mini"
+              disabled>
+            Returned
+          </el-button>
+
+          <el-button
+              v-else
+              type="primary"
+              size="mini"
+              @click="handleDelete(scope.row)">
+            Agree
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -220,7 +241,7 @@ export default defineComponent({
       request.post("LendRecord/deleteRecord", form3).then(res => {
         console.log(res)
         if (res.code == 0) {
-          ElMessage.success("delete success")
+          ElMessage.success("return success")
         } else
           ElMessage.error(res.msg)
         this.load()
