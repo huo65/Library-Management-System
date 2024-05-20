@@ -60,8 +60,8 @@
           <div v-if="scope.row.status == 1">
             <el-tag v-if="scope.row.status == 1" type="warning">returned</el-tag>
           </div>
-          <div v-else>
-          <el-popconfirm title="Confirm return?" @confirm="handleReturn(scope.row) " v-if="user.role == 3" >
+          <div v-else-if = "scope.row.status == 0">
+          <el-popconfirm title="Apply return?" @confirm="handleReturn(scope.row) " v-if="user.role == 3" >
             <template #reference>
               <el-button type="danger" size="mini" >return</el-button>
             </template>
@@ -71,6 +71,9 @@
               <el-button type="danger" size="mini" :disabled="scope.row.prolong == 0" >renew</el-button>
             </template>
           </el-popconfirm>
+          </div>
+          <div v-else>
+            <el-tag  type="info">Applying</el-tag>
           </div>
         </template>
       </el-table-column>
@@ -195,25 +198,25 @@ export default {
     },
     handleReturn(row){
       const form3 = JSON.parse(JSON.stringify(row))
+      // 修改为apply return status = 2
       request.post("bookwithuser/deleteRecord",form3).then(res =>{
         console.log(res)
-        if(res.code == 0 ){
-
-          let endDate = moment(new Date()).format("yyyy-MM-DD HH:mm:ss")
-          let recordForm = {};
-          recordForm.isbn = form3.isbn;
-          recordForm.readerId = form3.readerId
-          recordForm.lendTime = form3.lendtime
-          recordForm.returnTime = endDate
-          recordForm.status = "1"
-          request.put("/LendRecord1/", recordForm).then(res => {
-            console.log(res)
-          })
-
-          ElMessage.success("return success")
-        }
-        else
-          ElMessage.error(res.msg)
+        // if(res.code == 0 ){
+        //   let endDate = moment(new Date()).format("yyyy-MM-DD HH:mm:ss")
+        //   let recordForm = {};
+        //   recordForm.isbn = form3.isbn;
+        //   recordForm.readerId = form3.readerId
+        //   recordForm.lendTime = form3.lendtime
+        //   recordForm.returnTime = endDate
+        //   recordForm.status = "1"
+        //   request.put("/LendRecord1/", recordForm).then(res => {
+        //     console.log(res)
+        //   })
+        //
+        //   ElMessage.success("return success")
+        // }
+        // else
+        //   ElMessage.error(res.msg)
 
         this.load()
       })
