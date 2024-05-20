@@ -303,7 +303,24 @@ export default {
               this.numOfOutDataBook = this.numOfOutDataBook + 1;
             }
           }
-          console.log("in load():" + this.numOfOutDataBook);
+          // 后端同步
+          let fineForm = [];
+          for (let i = 0; i < this.numOfOutDataBook; i++){
+            fineForm[i] = {
+              // id: 100,
+              isbn : this.outDateBook[i].isbn,
+              readerid : this.user.id,
+              readername : this.user.username,
+              number : 10
+            }
+          }
+          console.log(fineForm)
+
+          request.post("/fine/add", fineForm).then(res => {
+            console.log(res)
+          })
+
+          console.log("okokoko  in load():" + this.numOfOutDataBook);
         })
       }
       //判断是否具有borrow权力
@@ -372,6 +389,7 @@ export default {
         //
       })
     },
+
     handlelend(id, isbn, name, bn,leftNumber) {
 
       if (this.phone == null) {
