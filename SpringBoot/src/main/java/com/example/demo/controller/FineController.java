@@ -29,7 +29,6 @@ public class FineController {
 
     @PostMapping("/add")
     public Result<?> insertNew(@RequestBody List<Fine> fineList){
-        System.out.println("@@@@"+fineList);
         fineService.batchInsertFine(fineList);
         return Result.success();
     }
