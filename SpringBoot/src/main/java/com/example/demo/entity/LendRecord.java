@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -22,5 +23,7 @@ public class LendRecord {
     private Date returnTime;
     private String status;
     private Integer borrownum;
+    @TableField(exist = false)
+    private String readername;
 
 }
