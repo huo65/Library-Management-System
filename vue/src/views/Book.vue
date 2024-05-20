@@ -299,6 +299,7 @@ export default {
                 bookName: this.bookData[i].bookName,
                 deadtime: this.bookData[i].deadtime,
                 lendtime: this.bookData[i].lendtime,
+                buID : this.bookData[i].id
               };
               this.numOfOutDataBook = this.numOfOutDataBook + 1;
             }
@@ -306,22 +307,23 @@ export default {
           // 后端同步
           let fineForm = [];
           for (let i = 0; i < this.numOfOutDataBook; i++){
+            let now = moment();
+            let daysDifference = now.diff(this.outDateBook[i].deadtime, 'days');
             fineForm[i] = {
               // id: 100,
               isbn : this.outDateBook[i].isbn,
-              bookname:this.outDateBook[i].bookname,
+              bookname:this.outDateBook[i].bookName,
               readerid : this.user.id,
               readername : this.user.username,
-              number : 10
+              number : daysDifference,
+              status: 0,
+              buID: this.outDateBook[i].buID,
             }
           }
-          console.log(fineForm)
-
           request.post("/fine/add", fineForm).then(res => {
             console.log(res)
           })
 
-          console.log("okokoko  in load():" + this.numOfOutDataBook);
         })
       }
       //判断是否具有borrow权力
@@ -459,11 +461,6 @@ export default {
       nowDate.setDate(nowDate.getDate() + 30);
       form3.deadtime = moment(nowDate).format("yyyy-MM-DD HH:mm:ss");
       form3.prolong = 1;
-      let now = moment();
-      let daysDifference = now.diff(form3.deadtime, 'days');
-
-// 注意：如果daysDifference为负数，表示还未到期；正数表示已过期 TODO 测试
-      console.log("#############过期了", Math.abs(daysDifference), "天")
       request.post("/bookwithuser/insertNew", form3).then(res => {
         console.log(res)
         this.load()

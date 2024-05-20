@@ -5,8 +5,12 @@ import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.alipay.easysdk.factory.Factory;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.example.demo.commom.AliPayConfig;
 import com.example.demo.entity.AliPay;
+import com.example.demo.entity.Fine;
+import com.example.demo.mapper.FineMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +34,8 @@ public class AliPayController {
  
    @Resource
    AliPayConfig aliPayConfig;
+   @Autowired
+   FineMapper fineMapper;
    private static final String GATEWAY_URL ="https://openapi-sandbox.dl.alipaydev.com/gateway.do";
    private static final String FORMAT ="JSON";
    private static final String CHARSET ="utf-8";
@@ -87,7 +93,13 @@ public class AliPayController {
             System.out.println("买家付款金额: " + params.get("buyer_pay_amount"));
  
             // 更新订单已支付的逻辑代码
-           
+            String fineIDS = params.get("out_trade_no");
+            int id = Integer.parseInt(fineIDS);
+            LambdaQueryWrapper<Fine> query = Wrappers.lambdaQuery();
+            query.eq(Fine::getId,id);
+            Fine fine = fineMapper.selectOne(query);
+            fine.setStatus(1);
+            fineMapper.updateById(fine);
          }
       }
       return "success";

@@ -46,6 +46,8 @@ public class Fine implements Serializable {
 
     private Integer status;
 
+    @TableField(exist = false)
+    private Integer buID;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
