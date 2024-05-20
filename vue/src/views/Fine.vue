@@ -42,19 +42,31 @@
       <el-table-column prop="isbn" label="ISBN" />
       <el-table-column prop="bookname" label="BookName" />
       <el-table-column prop="number" label="Amount" />
-      <el-table-column fixed="right" label="Operation" >
+      <el-table-column prop="status" label="Status" v-if="user.role != 3">
         <template v-slot="scope">
+          <el-tag v-if="scope.row.status == 0" type="warning">Not pay</el-tag>
+          <el-tag v-else type="success">Paid</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column fixed="right" label="Operation" >
+        <template v-slot="scope" v-if="user.role == 3 ">
           <div v-if="scope.row.status == 1">
             <el-tag v-if="scope.row.status == 1" type="warning">Paid</el-tag>
           </div>
           <div v-else>
-            <el-popconfirm title="confirm pay?" @confirm="handlePay(scope.row) " v-if="user.role == 3" >
+            <el-popconfirm title="confirm pay?" @confirm="handlePay(scope.row) " >
               <template #reference>
                 <el-button type="primary" size="mini" >pay</el-button>
               </template>
             </el-popconfirm>
           </div>
-
+        </template>
+        <template v-slot="scope" v-else>
+            <el-popconfirm title="confirm edit?" @confirm="handleEdit(scope.row) " >
+              <template #reference>
+                <el-button type="primary" size="mini" >Edit</el-button>
+              </template>
+            </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
@@ -74,17 +86,12 @@
       <el-dialog v-model="dialogVisible2" title="Modify borrowing info" width="30%">
         <el-form :model="form" label-width="120px">
 
-          <el-form-item label="ISBN">
-            <el-input style="width: 80%" v-model="form.isbn"></el-input>
+          <el-form-item label="Amount">
+            <el-input style="width: 80%" v-model="form.number"></el-input>
           </el-form-item>
-          <el-form-item label="Book name">
-            <el-input style="width: 80%" v-model="form.bookName"></el-input>
-          </el-form-item>
-          <el-form-item label="Reader">
-            <el-input style="width: 80%" v-model="form.nickName"></el-input>
-          </el-form-item>
-          <el-form-item label="renew次数">
-            <el-input style="width: 80%" v-model="form.prolong"></el-input>
+          <el-form-item label="Returningstatus" prop="status">
+            <el-radio v-model="form.status" label="0">Not pay</el-radio>
+            <el-radio v-model="form.status" label="1">Paid</el-radio>
           </el-form-item>
         </el-form>
         <template #footer>
@@ -163,10 +170,7 @@ export default {
       window.open("http://localhost:8090/alipay/pay?subject="+"B5Lib"+"&traceNo="+row.id+"&totalAmount="+row.number,'_self')
     },
     save(){
-      //ES6语法
-      //地址,但是？IP与端口？+请求参数
-      // this.form?这是自动保存在form中的，虽然显示时没有使用，但是这个对象中是有它的
-      request.post("/fine",this.form).then(res =>{
+      request.post("/fine/update",this.form).then(res =>{
         console.log(res)
         if(res.code == 0){
           ElMessage({
