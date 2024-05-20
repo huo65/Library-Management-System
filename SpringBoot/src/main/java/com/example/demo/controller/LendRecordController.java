@@ -44,19 +44,15 @@ public class LendRecordController {
     //删除一条记录(no 是还书
     @PostMapping("/deleteRecord")
     public  Result<?> deleteRecord(@RequestBody LendRecord lendRecord){
-//        Map<String,Object> map = new HashMap<>();
-//        map.put("isbn",LendRecord.getIsbn());
-//        map.put("lend_time",LendRecord.getBorrownum());
-//        log.info("###########接收参数："+map+"#####################");
-//        LendRecordMapper.deleteByMap(map);
         log.info("########################接受参数"+lendRecord);
         LambdaQueryWrapper<LendRecord> lendRecordLambdaQueryWrapper = Wrappers.lambdaQuery();
         lendRecordLambdaQueryWrapper.eq(LendRecord::getIsbn,lendRecord.getIsbn());
         lendRecordLambdaQueryWrapper.eq(LendRecord::getReaderId,lendRecord.getReaderId());
         lendRecordLambdaQueryWrapper.eq(LendRecord::getLendTime,lendRecord.getLendTime());
         LendRecord record = LendRecordMapper.selectOne(lendRecordLambdaQueryWrapper);
-        lendRecord.setStatus("1");
-        LendRecordMapper.updateById(lendRecord);
+        record.setStatus("1");
+        record.setReturnTime(new Date());
+        LendRecordMapper.updateById(record);
 
         LambdaQueryWrapper<BookWithUser> bUwrapper = Wrappers.lambdaQuery();
         bUwrapper.eq(BookWithUser::getIsbn,lendRecord.getIsbn());
