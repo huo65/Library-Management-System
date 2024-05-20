@@ -1,0 +1,43 @@
+.home {
+    padding: 10px;
+    overflow-x: auto;  /* 允许横向滚动 */
+}
+/* 基本样式和响应式字体大小调整 */
+body, .el-form, .el-table, .el-dialog {
+    font-family: 'Arial', sans-serif;
+}
+
+.el-input, .el-form-item, .el-button, .el-tag {
+    font-size: 12px; /* 默认字体大小 */
+}
+
+::v-deep .el-table th, ::v-deep .el-table td {
+    font-size: 16px !important;
+  }
+
+@media (max-width: 600px) {
+    .el-input, .el-form-item, .el-button, .el-tag {
+        font-size: 10px; /* 较小屏幕的字体大小 */
+    }
+    ::v-deep .el-table th, ::v-deep .el-table td {
+        font-size: 10px !important;
+      }
+}
+
+@media (min-width: 601px) and (max-width: 1024px) {
+    .el-input, .el-form-item, .el-button, .el-tag {
+        font-size: 12px; /* 中等屏幕的字体大小 */
+    }
+    ::v-deep .el-table th, ::v-deep .el-table td {
+        font-size: 12px !important;
+      }
+}
+
+@media (min-width: 1025px) {
+    .el-input, .el-form-item, .el-button, .el-tag {
+        font-size: 14px; /* 较大屏幕的字体大小 */
+    }
+    ::v-deep .el-table th, ::v-deep .el-table td {
+        font-size: 14px !important;
+      }
+}
