@@ -52,15 +52,10 @@ public class BookWithUserController {
     @PostMapping("/deleteRecord")
     @Transactional
     public  Result<?> deleteRecord(@RequestBody BookWithUser bookWithUser){
-//        Map<String,Object> map = new HashMap<>();
-//        map.put("isbn",BookWithUser.getIsbn());
-//        map.put("reader_id",BookWithUser.getReaderId());
-//        log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!:"+map);
-//        bookWithUserMapper.deleteByMap(map);
         LambdaQueryWrapper<BookWithUser> bUwrapper = Wrappers.lambdaQuery();
         bUwrapper.eq(BookWithUser::getId,bookWithUser.getId());
         BookWithUser bU = bookWithUserMapper.selectOne(bUwrapper);
-        bU.setStatus(1);
+        bU.setStatus(2);
         bookWithUserMapper.updateById(bU);
 
         LambdaQueryWrapper<Book> wrapper = Wrappers.lambdaQuery();
@@ -73,7 +68,7 @@ public class BookWithUserController {
         lendRecordLambdaQueryWrapper.eq(LendRecord::getIsbn,bookWithUser.getIsbn());
         lendRecordLambdaQueryWrapper.eq(LendRecord::getLendTime,bookWithUser.getLendtime());
         LendRecord lendRecord = lendRecordMapper.selectOne(lendRecordLambdaQueryWrapper);
-        lendRecord.setStatus("1");
+        lendRecord.setStatus("2");
         lendRecordMapper.updateById(lendRecord);
 
         return Result.success();
