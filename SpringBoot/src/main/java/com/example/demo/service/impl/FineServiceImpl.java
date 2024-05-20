@@ -38,21 +38,20 @@ public class FineServiceImpl extends ServiceImpl<FineMapper, Fine>
     @Resource
     LendRecordMapper lendRecordMapper;
     public void batchInsertFine(List<Fine> fineList) {
-
-//        1. 根据读者id删除之前记录
-        if (fineList != null){
-            Fine fine = fineList.get(0);
+        for (Fine fine : fineList){
             LambdaQueryWrapper<Fine> query = Wrappers.lambdaQuery();
-            query.eq(Fine::getStatus,0);
+            query.eq(Fine::getIsbn,fine.getIsbn());
             query.eq(Fine::getReaderid,fine.getReaderid());
-            List<Fine> list = fineMapper.selectList(query);
-            System.out.println("更新记录："+list);
-            this.removeBatchByIds(list);
+//            query.eq(Fine::getNumber,fine.getNumber());
+            Fine oldFine = fineMapper.selectOne(query);
+            if (oldFine != null){
+                fineMapper.updateById(fine);
+            }else {
+                fineMapper.insert(fine);
+            }
         }
-//        2. 重新插入
-            this.saveBatch(fineList);
 
-//        3. 修改对应记录
+//        修改对应记录的deadtime
         for (Fine fine : fineList){
             LambdaQueryWrapper<BookWithUser> bUwrapper = Wrappers.lambdaQuery();
             bUwrapper.eq(BookWithUser::getId,fine.getBuID());
