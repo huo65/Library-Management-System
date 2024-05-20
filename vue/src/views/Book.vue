@@ -552,3 +552,4 @@ export default {
   },
 }
 </script>
+<style scoped src="..\..\dist\css\responsive_ui.css"></style>
