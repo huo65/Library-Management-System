@@ -58,11 +58,11 @@ public class BookWithUserController {
         bU.setStatus(2);
         bookWithUserMapper.updateById(bU);
 
-        LambdaQueryWrapper<Book> wrapper = Wrappers.lambdaQuery();
-        wrapper.eq(Book::getIsbn,bookWithUser.getIsbn());
-        Book book = bookMapper.selectOne(wrapper);
-        book.setLeftNumber(book.getLeftNumber()+1);
-        bookMapper.updateById(book);
+//        LambdaQueryWrapper<Book> wrapper = Wrappers.lambdaQuery();
+//        wrapper.eq(Book::getIsbn,bookWithUser.getIsbn());
+//        Book book = bookMapper.selectOne(wrapper);
+//        book.setLeftNumber(book.getLeftNumber()+1);
+//        bookMapper.updateById(book);
 
         LambdaQueryWrapper<LendRecord> lendRecordLambdaQueryWrapper = Wrappers.lambdaQuery();
         lendRecordLambdaQueryWrapper.eq(LendRecord::getIsbn,bookWithUser.getIsbn());
