@@ -293,7 +293,7 @@ export default {
           for (let i = 0; i < this.number; i++) {
             this.isbnArray[i] = this.bookData[i].isbn;
             let dDate = new Date(this.bookData[i].deadtime);
-            if (dDate < nowDate) {
+            if (dDate < nowDate && this.bookData[i].status == '0') {
               this.outDateBook[this.numOfOutDataBook] = {
                 isbn: this.bookData[i].isbn,
                 bookName: this.bookData[i].bookName,
@@ -439,6 +439,11 @@ export default {
       nowDate.setDate(nowDate.getDate() + 30);
       form3.deadtime = moment(nowDate).format("yyyy-MM-DD HH:mm:ss");
       form3.prolong = 1;
+      let now = moment();
+      let daysDifference = now.diff(form3.deadtime, 'days');
+
+// 注意：如果daysDifference为负数，表示还未到期；正数表示已过期 TODO 测试
+      console.log("#############过期了", Math.abs(daysDifference), "天")
       request.post("/bookwithuser/insertNew", form3).then(res => {
         console.log(res)
         this.load()
