@@ -9,9 +9,11 @@ import com.example.demo.commom.Result;
 import com.example.demo.entity.Book;
 import com.example.demo.entity.BookWithUser;
 import com.example.demo.entity.LendRecord;
+import com.example.demo.entity.User;
 import com.example.demo.mapper.BookMapper;
 import com.example.demo.mapper.BookWithUserMapper;
 import com.example.demo.mapper.LendRecordMapper;
+import com.example.demo.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +32,8 @@ public class LendRecordController {
 
     @Resource
     BookWithUserMapper bookWithUserMapper;
+    @Resource
+    UserMapper userMapper;
 
     @Resource
     BookMapper bookMapper;
@@ -100,8 +104,18 @@ public class LendRecordController {
             wrappers.like(LendRecord::getReaderId,search3);
         }
         wrappers.orderByDesc(LendRecord::getLendTime);    //按照借阅时间最新在前排序
-        Page<LendRecord> LendRecordPage =LendRecordMapper.selectPage(new Page<>(pageNum,pageSize), wrappers);
-        return Result.success(LendRecordPage);
+        Page<LendRecord> lendRecordPage =LendRecordMapper.selectPage(new Page<>(pageNum,pageSize), wrappers);
+        // 遍历结果，查询并填充readerName
+        List<LendRecord> records = lendRecordPage.getRecords();
+        for (LendRecord record : records) {
+            User user = userMapper.selectById(record.getReaderId());
+            if (user != null) {
+                record.setReadername(user.getNickName()); // 假设LendRecord类中已有setter方法
+            }
+        }
+        lendRecordPage.setRecords(records);
+
+        return Result.success(lendRecordPage);
     }
 
     @PutMapping("/{isbn}")

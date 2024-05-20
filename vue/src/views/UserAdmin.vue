@@ -43,10 +43,6 @@
     </div>
 <!-- 数据字段-->
     <el-table :data="tableData" stripe border="true"  @selection-change="handleSelectionChange" >
-      <el-table-column v-if="user.role ==1 "
-                       type="selection"
-                       width="55">
-      </el-table-column>
       <el-table-column prop="id" label="Admin id" sortable />
       <el-table-column prop="username" label="Username" />
       <el-table-column prop="nickName" label="Name" />
@@ -55,10 +51,10 @@
       <el-table-column prop="address" label="Address" />
       <el-table-column fixed="right" label="Operation" >
         <template v-slot="scope">
-          <el-button  size="mini" @click ="handleEdit(scope.row)">Process/Edit </el-button>
+          <el-button  size="mini" @click ="handleEdit(scope.row)">Edit </el-button>
           <el-popconfirm title="Confirm ban?" @confirm="handleDelete(scope.row.id)">
             <template #reference>
-              <el-button type="danger" size="mini" style="margin-top: 10px; margin-left: 50px">Account ban</el-button>
+              <el-button type="danger" size="mini" style="margin-top: 10px; margin-left: 50px">Ban</el-button>
             </template>
           </el-popconfirm>
         </template>
