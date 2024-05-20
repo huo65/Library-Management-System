@@ -1,97 +1,218 @@
 <template>
-  <el-button type="primary" size="small" @click="showNoOrder()">支付</el-button>
-  <!-- 支付界面 -->
-  <el-dialog v-model="orderDialogVisible" width="60%" center modal-append-to-body>
-    <span>
-      <el-descriptions width="80%" class="margin-top" title="支付订单" :column="1" border>
-         <el-descriptions-item>
-         <template slot="label">
-         <i class="el-icon-user"></i>
-        酒店名称
-         </template>
-           {{ curOrder.hotel }}
-        </el-descriptions-item>
-        <el-descriptions-item>
-          <template slot="label">
-         <i class="el-icon-house"></i>
-            房间类型
-         </template>
-             {{ curOrder.room }}
-       </el-descriptions-item>
-                  <el-descriptions-item>
-          <template slot="label">
-         <i class="el-icon-food"></i>
-            有无早餐
-         </template>
-             {{ curOrder.breakfast }}
-       </el-descriptions-item>
-                       <el-descriptions-item>
-          <template slot="label">
-         <i class="el-icon-coin"></i>
-        需要支付金额
-         </template>
-            {{ curOrder.price }}
-       </el-descriptions-item>
-                   <el-descriptions-item>
-          <template slot="label">
-         <i class="el-icon-time"></i>
-        预计入住时间
-         </template>
-            {{ curOrder.checkIn }}
-       </el-descriptions-item>
-                    <el-descriptions-item>
-          <template slot="label">
-         <i class="el-icon-time"></i>
-        预计退房时间
-         </template>
-            {{ curOrder.checkOut }}
-       </el-descriptions-item>
-                   <el-descriptions-item>
-          <template slot="label">
-         <i class="el-icon-time"></i>
-        订单提交时间
-         </template>
-            {{ curOrder.time }}
-       </el-descriptions-item>
-      </el-descriptions>
-    </span>
-    <template #footer>
+  <div class="home" style ="padding: 10px">
+    <!-- 搜索-->
+    <div style="margin: 10px 0;">
+
+      <el-form inline="true" size="small" >
+        <el-form-item label="ISBN" >
+          <el-input v-model="search1" placeholder="Please enter ISBN"  clearable>
+            <template #prefix><el-icon class="el-input__icon"><search/></el-icon></template>
+          </el-input>
+        </el-form-item >
+        <el-form-item label="Book name" >
+          <el-input v-model="search2" placeholder="Please enter Book name"  clearable>
+            <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
+          </el-input>
+        </el-form-item >
+
+        <el-form-item label="ReaderID" v-if="user.role != 3">
+          <el-input v-model="search3" placeholder="Please enter Reader ID"  clearable>
+            <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
+          </el-input>
+        </el-form-item >
+        <el-form-item label="Reader Name" v-if="user.role != 3">
+          <el-input v-model="search4" placeholder="Please enter Reader name"  clearable>
+            <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
+          </el-input>
+        </el-form-item >
+        <el-form-item>
+          <el-button type="primary" style="margin-left: 1%" @click="load" size="mini">Search</el-button>
+        </el-form-item>
+        <el-form-item>
+          <el-button size="mini"  type="danger" @click="clear">Reset</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+
+    <el-table :data="tableData" stripe border="true" @selection-change="handleSelectionChange">
+
+      <el-table-column prop="id" label="ID" sortable />
+      <el-table-column prop="readerid" label="ReaderID" />
+      <el-table-column prop="readername" label="ReaderName" />
+      <el-table-column prop="isbn" label="ISBN" />
+      <el-table-column prop="bookname" label="BookName" />
+      <el-table-column prop="number" label="Amount" />
+      <el-table-column fixed="right" label="Operation" >
+        <template v-slot="scope">
+          <div v-if="scope.row.status == 1">
+            <el-tag v-if="scope.row.status == 1" type="warning">Paid</el-tag>
+          </div>
+          <div v-else>
+            <el-popconfirm title="confirm pay?" @confirm="handlePay(scope.row) " v-if="user.role == 3" >
+              <template #reference>
+                <el-button type="primary" size="mini" >pay</el-button>
+              </template>
+            </el-popconfirm>
+          </div>
+
+        </template>
+      </el-table-column>
+    </el-table>
+    <!--    分页-->
+    <div style="margin: 10px 0">
+      <el-pagination
+          v-model:currentPage="currentPage"
+          :page-sizes="[5, 10, 20]"
+          :page-size="pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+      >
+      </el-pagination>
+
+      <el-dialog v-model="dialogVisible2" title="Modify borrowing info" width="30%">
+        <el-form :model="form" label-width="120px">
+
+          <el-form-item label="ISBN">
+            <el-input style="width: 80%" v-model="form.isbn"></el-input>
+          </el-form-item>
+          <el-form-item label="Book name">
+            <el-input style="width: 80%" v-model="form.bookName"></el-input>
+          </el-form-item>
+          <el-form-item label="Reader">
+            <el-input style="width: 80%" v-model="form.nickName"></el-input>
+          </el-form-item>
+          <el-form-item label="renew次数">
+            <el-input style="width: 80%" v-model="form.prolong"></el-input>
+          </el-form-item>
+        </el-form>
+        <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" @click="pay">支付</el-button>
-        <el-button @click="orderDialogVisible = false">取消</el-button>
+        <el-button @click="dialogVisible2 = false">Cancel</el-button>
+        <el-button type="primary" @click="save">Confirm</el-button>
       </span>
-    </template>
-  </el-dialog>
+        </template>
+      </el-dialog>
+
+    </div>
+  </div>
 </template>
 
-<script setup>
-import { ref } from 'vue';
-import { ElMessage } from "element-plus";
+<script>
+// @ is an alias to /src
+import request from "../utils/request";
+import {ElMessage} from "element-plus";
+import moment from "moment";
+import router from "@/router";
+export default {
+  created(){
+    let userStr = sessionStorage.getItem("user") ||"{}"
+    this.user = JSON.parse(userStr)
+    let userJson = sessionStorage.getItem("user")
+    if(!userJson)
+    {
+      router.push("/login")
+    }
+    this.load()
+  },
+  name: 'fine',
+  methods: {
 
-// 使用Composition API
-const curOrder = ref({
-  hotel: "东篱客栈",
-  room: "豪华双人房",
-  breakfast: "含早",
-  price: "588元",
-  checkIn: "2023-04-01 14:00",
-  checkOut: "2023-04-02 12:00",
-  time: "2023-03-25 10:00:00",
-});
+    load(){
+      if(this.user.role != 3){
+        request.get("/fine",{
+          params:{
+            pageNum: this.currentPage,
+            pageSize: this.pageSize,
+            search1: this.search1,//isbn
+            search2: this.search2,//bookname
+            search3: this.search3,
+            search4: this.search4,//readername
+          }
+        }).then(res =>{
+          console.log(res)
+          this.tableData = res.data.records
+          this.total = res.data.total
+        })
+      }
+      else {
+        request.get("/fine",{
+          params:{
+            pageNum: this.currentPage,
+            pageSize: this.pageSize,
+            search1: this.search1,
+            search2: this.search2,
+            search3: this.user.id,
+          }
+        }).then(res =>{
+          console.log(res)
+          this.tableData = res.data.records
+          this.total = res.data.total
+        })
+      }
+    },
+    clear(){
+      this.search1 = ""
+      this.search2 = ""
+      this.search3 = ""
+      this.load()
+    },
+    handlePay(){
+      window.open('http://localhost:8090/alipay/pay?subject=%E4%B8%9C%E5%8C%97%E8%8F%9C&traceNo=1&totalAmount=100');
+    },
+    save(){
+      //ES6语法
+      //地址,但是？IP与端口？+请求参数
+      // this.form?这是自动保存在form中的，虽然显示时没有使用，但是这个对象中是有它的
+      request.post("/fine",this.form).then(res =>{
+        console.log(res)
+        if(res.code == 0){
+          ElMessage({
+            message: 'Modify info success',
+            type: 'success',
+          })
+        }
+        else {
+          ElMessage.error(res.msg)
+        }
+        this.load()
+        this.dialogVisible2 = false
+      })
+    },
 
-const orderDialogVisible = ref(false);
+    handleEdit(row){
+      this.form = JSON.parse(JSON.stringify(row))
+      this.dialogVisible2 = true
+    },
+    handleSizeChange(pageSize){
+      this.pageSize = pageSize
+      this.load()
+    },
+    handleCurrentChange(pageNum){
+      this.pageNum = pageNum
+      this.load()
+    },
 
-function showNoOrder(row = curOrder.value) {
-  // 如果需要处理外部传入的实际row数据，此处逻辑可以调整
-  curOrder.value = row;
-  orderDialogVisible.value = true;
-}
-
-function pay() {
-  window.open('http://localhost:8090/alipay/pay?subject=%E4%B8%9C%E5%8C%97%E8%8F%9C&traceNo=100014&totalAmount=100');
+  },
+  data() {
+    return {
+      form: {},
+      form2:{},
+      form3:{},
+      dialogVisible: false,
+      dialogVisible2: false,
+      search1:'',
+      search2:'',
+      search3:'',
+      search4:'',
+      total:10,
+      currentPage:1,
+      pageSize: 10,
+      tableData: [],
+      user:{},
+      forms:[],
+    }
+  },
 }
 </script>
-
-<style scoped>
-/* 样式代码保持不变 */
-</style>

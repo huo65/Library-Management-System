@@ -85,7 +85,7 @@
       <span>Borrowing record</span>
     </el-menu-item>
 
-    <el-menu-item index="/fine" v-if="user.role == 3">
+    <el-menu-item index="/fine">
       <el-icon><bell /></el-icon>
       <span>Fine</span>
     </el-menu-item>
