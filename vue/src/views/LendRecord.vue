@@ -58,6 +58,7 @@
       <el-table-column prop="isbn" label="ISBN" sortable/>
       <el-table-column prop="bookname" label="Book name"/>
       <el-table-column prop="readerId" label="Reader id" sortable/>
+      <el-table-column prop="readername" label="Reader Name" sortable/>
       <el-table-column prop="lendTime" label="Borrowing date" sortable/>
       <el-table-column prop="returnTime" label="Returning date" sortable/>
       <el-table-column prop="status" label="Status">
