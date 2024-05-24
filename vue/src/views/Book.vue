@@ -71,14 +71,14 @@
                        type="selection"
                        width="55">
       </el-table-column>
-      <el-table-column prop="isbn" label="ISBN" sortable/>
+      <el-table-column prop="isbn" label="ISBN" sortable />
       <el-table-column prop="name" label="Book name"/>
-      <el-table-column prop="price" label="Price" sortable/>
-      <el-table-column prop="author" label="author"/>
+      <el-table-column prop="price" label="Price" sortable width="80%"/>
+      <el-table-column prop="author" label="author" width="80%"/>
       <el-table-column prop="publisher" label="Publisher"/>
 <!--      <el-table-column prop="createTime" label="Date of publication" sortable/>-->
-      <el-table-column prop="location" label="Location"/>
-      <el-table-column prop="borrownum" label="Borrowed time" sortable v-if="user.role == 2"/>
+      <el-table-column prop="location" label="Location" width="90%"/>
+      <el-table-column prop="borrownum" label="Borrowed time" sortable v-if="user.role == 2 " width="90%"/>
 
 <!--      <el-table-column prop="leftNumber" label="leftNumber">-->
 <!--        <template v-slot="scope">-->
@@ -86,8 +86,8 @@
 <!--          <el-tag v-else type="success">Not borrowed</el-tag>-->
 <!--        </template>-->
 <!--      </el-table-column>-->
-      <el-table-column prop="totalNumber" label="Total" sortable/>
-      <el-table-column prop="leftNumber" label="Remaining" sortable/>
+      <el-table-column prop="totalNumber" label="Total" sortable width="90%"/>
+      <el-table-column prop="leftNumber" label="Remaining" sortable />
       <el-table-column fixed="right" label="Operation">
         <template v-slot="scope">
           <el-button size="mini" @click="handleEdit(scope.row)" v-if="user.role == 2">Modify</el-button>

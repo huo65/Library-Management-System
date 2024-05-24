@@ -7,8 +7,7 @@
 
 </template>
 
-<style>
-
+<style lang="css">
 </style>
 <script>
 
