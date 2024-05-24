@@ -58,6 +58,11 @@ const routes = [
         name: 'Fine',
         component: () => import("@/views/Fine.vue")
       },
+      {
+        path: 'code',
+        name: 'Code',
+        component: () => import("@/views/Scan.vue")
+      }
     ]
   },
   {

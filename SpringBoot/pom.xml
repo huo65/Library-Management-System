@@ -92,6 +92,12 @@
 			<artifactId>alipay-sdk-java</artifactId>
 			<version>4.22.113.ALL</version>
 		</dependency>
+<!--		条形码识别-->
+		<dependency>
+			<groupId>com.tencentcloudapi</groupId>
+			<artifactId>tencentcloud-sdk-java-ocr</artifactId>
+			<version>3.1.1024</version>
+		</dependency>
 
 	</dependencies>
 
