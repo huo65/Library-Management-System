@@ -47,7 +47,7 @@
       <el-table-column prop="username" label="Username" />
       <el-table-column prop="nickName" label="Name" />
       <el-table-column prop="phone" label="Email" />
-      <el-table-column prop="sex" label="Gender" />
+<!--      <el-table-column prop="sex" label="Gender" />-->
       <el-table-column prop="address" label="Address" />
       <el-table-column fixed="right" label="Operation" >
         <template v-slot="scope">
