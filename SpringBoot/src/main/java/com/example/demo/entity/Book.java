@@ -15,19 +15,11 @@ import java.util.Date;
 public class Book {
 
     @TableId (type = IdType.AUTO)
-    private Integer id;
     private String isbn;
     private String name;
-    private BigDecimal price;
     private String author;
-    private Integer borrownum;
     private String publisher;
-    @JsonFormat(locale="zh",timezone="GMT+8", pattern="yyyy-MM-dd")
-    private Date createTime;
-    private String status;
-    private String location;
     private Integer leftNumber;
     private Integer totalNumber;
-
 
 }
