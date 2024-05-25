@@ -25,17 +25,13 @@ DROP TABLE IF EXISTS `book`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `book` (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
   `isbn` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '图书编号',
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '名称',
-  `price` decimal(10,2) DEFAULT NULL COMMENT '价格',
   `author` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '作者',
   `publisher` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '出版社',
-  `create_time` date DEFAULT NULL COMMENT '出版时间',
-  `status` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '1' COMMENT '0：未归还 1：已归还',
-  `borrownum` int NOT NULL DEFAULT '0' COMMENT '此书被借阅次数',
-  `location` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '存放位置',
-  PRIMARY KEY (`id`) USING BTREE
+  `left_number` bigint NOT NULL COMMENT '剩余数量',
+  `total_number` bigint NOT NULL COMMENT '总共数量',
+  PRIMARY KEY (`isbn`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -45,7 +41,7 @@ CREATE TABLE `book` (
 
 LOCK TABLES `book` WRITE;
 /*!40000 ALTER TABLE `book` DISABLE KEYS */;
-INSERT INTO `book` VALUES (9,'20211880115','十万个为什么',15.00,'苏格与','西安电子科技大学出版社','2022-12-05','0',19,'01-04-22'),(10,'20211880119','五万个为什么',20.00,'聂家辉','西安电子科技大学出版社','2022-12-01','0',19,'02-28-23'),(11,'20211880106','一万个为什么',16.00,'丁奕中','西安电子科技大学出版社','2022-12-02','1',14,'03-15-21'),(12,'20211880114','计算机操作系统',32.00,'凌浩晨','西安电子科技大学出版社','2022-12-03','1',4,'08-31-17'),(13,'20211880118','伊索寓言',25.00,'沈益威','西安电子科技大学出版社','2022-12-04','1',12,'12-18-22'),(15,'20211880109','格林童话',20.00,'张超祥','西安电子科技大学出版社','2022-12-05','1',3,'09-16-25'),(16,'20211880100','图书管理系统',188.00,'聂家辉','西安电子科技大学出版社','2022-08-10','0',16,'05-20-20'),(17,'20211880128','和另一个自己谈谈心',12.00,'\r\n武志红','中国友谊出版公司','2021-01-01','1',12,'04-12-24'),(18,'20211880111','全国计算机技术与软件专业技术资格(水平)考试. 系统分析师考试大纲',12.00,'全国计算机技术与软件专业技术资格(水平)考试办公室','清华大学出版社','2004-05-22','1',1,'11-09-23'),(19,'20211880145','简单减肥餐, 好吃不反弹',20.00,'\r\n萨巴蒂娜','中国轻工业出版社','2022-07-07','1',1,'12-18-22'),(20,'20211880155','其实她真的好喜欢你',25.00,'\r\n莫妮打','时代文艺出版社','2022-02-02','1',0,'10-15-26'),(21,'20211880156','导游业务. 第7版',24.00,'\r\n全国导游人员资格考试教材编写组','旅游教育出版社','2022-08-22','1',0,'02-27-29'),(22,'20211880166','法医秦明. 幸存者',22.00,'\r\n法医秦明','北京联合出版公司','2022-02-22','1',0,'05-09-16'),(23,'20211880177','中国书法史',24.00,'\r\n徐建融','浙江人民美术出版社','2021-11-01','1',0,'02-27-29'),(24,'20211880199','实用百草治百病',22.00,'\r\n宋纬文','福建科学技术出版社','2021-09-22','1',0,'12-04-25'),(25,'20211880176','烈火芳菲',20.00,'赵方新','北京十月文艺出版社','2022-01-22','1',0,'06-28-19');
+INSERT INTO `book` VALUES ('20211880115','十万个为什么','苏格与','西安电子科技大学出版社',3,6),('20211880119','五万个为什么','聂家辉','西安电子科技大学出版社',2,10),('20211880106','一万个为什么','丁奕中','西安电子科技大学出版社',4,5),('20211880114','计算机操作系统','凌浩晨','西安电子科技大学出版社',1,5),('20211880118','伊索寓言','沈益威','西安电子科技大学出版社',2,3),('20211880109','格林童话','张超祥','西安电子科技大学出版社',10,14),('20211880100','图书管理系统','聂家辉','西安电子科技大学出版社',3,7),('20211880128','和另一个自己谈谈心','\r\n武志红','中国友谊出版公司',6,9),('20211880111','全国计算机技术与软件专业技术资格(水平)考试. 系统分析师考试大纲','全国计算机技术与软件专业技术资格(水平)考试办公室','清华大学出版社',6,15),('20211880145','简单减肥餐, 好吃不反弹','\r\n萨巴蒂娜','中国轻工业出版社',4,10),('20211880155','其实她真的好喜欢你','\r\n莫妮打','时代文艺出版社',6,11),('20211880156','导游业务. 第7版','\r\n全国导游人员资格考试教材编写组','旅游教育出版社',1,8),('20211880166','法医秦明. 幸存者','\r\n法医秦明','北京联合出版公司',5,10),('20211880177','中国书法史','\r\n徐建融','浙江人民美术出版社',4,10),('20211880199','实用百草治百病','\r\n宋纬文','福建科学技术出版社',5,7),('20211880176','烈火芳菲','赵方新','北京十月文艺出版社',2,12),('20211880184','高等数学','同济大学数学系','高等教育出版社',4,15),('20211880192','平凡的世界','路遥','北京十月文艺出版社',3,10);
 /*!40000 ALTER TABLE `book` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -139,6 +135,61 @@ LOCK TABLES `user` WRITE;
 INSERT INTO `user` VALUES (1,'SysAdmin','123','B5Sys','17326788058','男','温州大学南校区A12-417室',1,'1'),(21,'admin','123','管理员','17326788058','男','温州大学计算机与人工智能学院',2,'1'),(29,'huo','123','huo','13289711132','男',NULL,2,NULL),(30,'huo2','123','111','13289711131','男',NULL,3,NULL),(31,'admin2','123456','admin2','13289711132',NULL,'陕西',2,NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `specificBook`
+--
+
+DROP TABLE IF EXISTS `specificBook`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `specificBook` (
+  `id` INT(8) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `isbn` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '图书编号',
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '名称',
+  `status` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '1' COMMENT '0：未归还 1：已归还',
+  `location` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '存放位置',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='具体书籍表';
+
+--
+-- Dumping data for table `specificBook`
+--
+
+LOCK TABLES `specificBook` WRITE;
+/*!40000 ALTER TABLE `specificBook` DISABLE KEYS */;
+INSERT INTO `specificBook` VALUES (00000009,'20211880115','十万个为什么','0','01-04-22'),(00000010,'20211880119','五万个为什么','0','02-28-23'),(00000011,'20211880106','一万个为什么','1','03-15-21'),(00000012,'20211880114','计算机操作系统','1','08-31-17'),(00000013,'20211880118','伊索寓言','1','12-18-22'),(00000015,'20211880109','格林童话','1','09-16-25'),(00000016,'20211880100','图书管理系统','0','05-20-20'),(000000017,'20211880128','和另一个自己谈谈心','1','04-12-24'),(00000018,'20211880111','全国计算机技术与软件专业技术资格(水平)考试. 系统分析师考试大纲','1','11-09-23'),(00000019,'20211880145','简单减肥餐, 好吃不反弹','1','12-18-22'),(00000020,'20211880155','其实她真的好喜欢你','1','10-15-26'),(00000021,'20211880156','导游业务. 第7版','1','02-27-29'),(00000022,'20211880166','法医秦明. 幸存者','1','05-09-16'),(00000023,'20211880177','中国书法史','1','02-27-29'),(00000024,'20211880199','实用百草治百病','1','12-04-25'),(00000025,'20211880176','烈火芳菲','1','06-28-19'),(00000026,'20211880184','高等数学','0','07-12-14'),(00000027,'20211880192','平凡的世界','1','06-14-11');
+/*!40000 ALTER TABLE `specificBook` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `codeInfo`
+--
+
+DROP TABLE IF EXISTS `codeInfo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `codeInfo` (
+  `id` INT(8) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `isbn` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '图书编号',
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '名称',
+  `author` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '作者',
+  `publisher` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '出版社',
+  `create_time` date DEFAULT NULL COMMENT '出版时间',
+  `status` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '1' COMMENT '0：未归还 1：已归还',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC COMMENT='条形码信息表';
+
+--
+-- Dumping data for table `codeInfo`
+--
+
+LOCK TABLES `codeInfo` WRITE;
+/*!40000 ALTER TABLE `codeInfo` DISABLE KEYS */;
+INSERT INTO `codeInfo` VALUES (00000009,'20211880115','十万个为什么','苏格与','西安电子科技大学出版社','2022-12-05','0'),(00000010,'20211880119','五万个为什么','聂家辉','西安电子科技大学出版社','2022-12-01','0'),(00000011,'20211880106','一万个为什么','丁奕中','西安电子科技大学出版社','2022-12-02','1'),(00000012,'20211880114','计算机操作系统','凌浩晨','西安电子科技大学出版社','2022-12-03','1'),(00000013,'20211880118','伊索寓言','沈益威','西安电子科技大学出版社','2022-12-04','1'),(00000015,'20211880109','格林童话','张超祥','西安电子科技大学出版社','2022-12-05','1'),(00000016,'20211880100','图书管理系统','聂家辉','西安电子科技大学出版社','2022-08-10','0'),(00000017,'20211880128','和另一个自己谈谈心','\r\n武志红','中国友谊出版公司','2021-01-01','1'),(00000018,'20211880111','全国计算机技术与软件专业技术资格(水平)考试. 系统分析师考试大纲','全国计算机技术与软件专业技术资格(水平)考试办公室','清华大学出版社','2004-05-22','1'),(00000019,'20211880145','简单减肥餐, 好吃不反弹','\r\n萨巴蒂娜','中国轻工业出版社','2022-07-07','1'),(00000020,'20211880155','其实她真的好喜欢你','\r\n莫妮打','时代文艺出版社','2022-02-02','1'),(00000021,'20211880156','导游业务. 第7版','\r\n全国导游人员资格考试教材编写组','旅游教育出版社','2022-08-22','1'),(00000022,'20211880166','法医秦明. 幸存者','\r\n法医秦明','北京联合出版公司','2022-02-22','1'),(00000023,'20211880177','中国书法史','\r\n徐建融','浙江人民美术出版社','2021-11-01','1'),(00000024,'20211880199','实用百草治百病','\r\n宋纬文','福建科学技术出版社','2021-09-22','1'),(00000025,'20211880176','烈火芳菲','赵方新','北京十月文艺出版社','2022-01-22','1'),(00000026,'20211880184','高等数学','同济大学数学系','高等教育出版社','2021-07-07','0'),(00000027,'20211880192','平凡的世界','路遥','北京十月文艺出版社','2021-06-10','1');
+/*!40000 ALTER TABLE `codeInfo` ENABLE KEYS */;
+UNLOCK TABLES;
+
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -148,5 +199,4 @@ UNLOCK TABLES;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
 -- Dump completed on 2024-04-20 17:45:59

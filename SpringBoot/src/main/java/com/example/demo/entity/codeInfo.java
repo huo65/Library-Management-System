@@ -1,25 +1,24 @@
 package com.example.demo.entity;
 
-
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
-@TableName("book")
+@TableName("codeInfo")
 @Data
-public class Book {
+public class codeInfo {
 
     @TableId (type = IdType.AUTO)
+    private Integer id;
     private String isbn;
     private String name;
     private String author;
     private String publisher;
-    private Integer leftNumber;
-    private Integer totalNumber;
-
+    @JsonFormat(locale="zh",timezone="GMT+8", pattern="yyyy-MM-dd")
+    private Date createTime;
+    private String status;
 }
