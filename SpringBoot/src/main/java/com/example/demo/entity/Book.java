@@ -21,5 +21,6 @@ public class Book {
     private String publisher;
     private Integer leftNumber;
     private Integer totalNumber;
+    private Integer borrownum;
 
 }
