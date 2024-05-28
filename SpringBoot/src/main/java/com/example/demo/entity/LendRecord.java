@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -12,8 +13,9 @@ import java.util.Date;
 @Data
 public class LendRecord {
 
-    @TableId
+    @TableId (type = IdType.AUTO)
     private Integer id;
+    private Integer bookId;
     private Integer readerId;
     private String isbn;
     private String bookname;
