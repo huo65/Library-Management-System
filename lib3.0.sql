@@ -11,7 +11,7 @@
  Target Server Version : 80026
  File Encoding         : 65001
 
- Date: 28/05/2024 09:09:38
+ Date: 30/05/2024 08:52:45
 */
 
 SET NAMES utf8mb4;
@@ -28,9 +28,9 @@ CREATE TABLE `book`  (
   `publisher` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '出版社',
   `left_number` bigint(0) NOT NULL COMMENT '剩余数量',
   `total_number` bigint(0) NOT NULL COMMENT '总共数量',
-  `borrownum` int(0) NULL DEFAULT NULL,
+  `borrownum` int(0) NULL DEFAULT NULL COMMENT '总借次数',
   PRIMARY KEY (`isbn`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 27 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of book
@@ -88,18 +88,18 @@ CREATE TABLE `codeinfo`  (
   `create_time` date NULL DEFAULT NULL COMMENT '出版时间',
   `status` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '1' COMMENT '0：未归还 1：已归还',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 32 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '条形码信息表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 27 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '条形码信息表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of codeinfo
 -- ----------------------------
-INSERT INTO `codeinfo` VALUES (00000009, '20211880115', '十万个为什么', '苏格与', '西安电子科技大学出版社', '2022-12-05', '0');
-INSERT INTO `codeinfo` VALUES (00000010, '20211880119', '五万个为什么', '聂家辉', '西安电子科技大学出版社', '2022-12-01', '0');
+INSERT INTO `codeinfo` VALUES (00000009, '20211880115', '十万个为什么', '苏格与', '西安电子科技大学出版社', '2022-12-05', '1');
+INSERT INTO `codeinfo` VALUES (00000010, '20211880119', '五万个为什么', '聂家辉', '西安电子科技大学出版社', '2022-12-01', '1');
 INSERT INTO `codeinfo` VALUES (00000011, '20211880106', '一万个为什么', '丁奕中', '西安电子科技大学出版社', '2022-12-02', '1');
 INSERT INTO `codeinfo` VALUES (00000012, '20211880114', '计算机操作系统', '凌浩晨', '西安电子科技大学出版社', '2022-12-03', '1');
 INSERT INTO `codeinfo` VALUES (00000013, '20211880118', '伊索寓言', '沈益威', '西安电子科技大学出版社', '2022-12-04', '1');
 INSERT INTO `codeinfo` VALUES (00000015, '20211880109', '格林童话', '张超祥', '西安电子科技大学出版社', '2022-12-05', '1');
-INSERT INTO `codeinfo` VALUES (00000016, '20211880100', '图书管理系统', '聂家辉', '西安电子科技大学出版社', '2022-08-10', '0');
+INSERT INTO `codeinfo` VALUES (00000016, '20211880100', '图书管理系统', '聂家辉', '西安电子科技大学出版社', '2022-08-10', '1');
 INSERT INTO `codeinfo` VALUES (00000017, '20211880128', '和另一个自己谈谈心', '\r\n武志红', '中国友谊出版公司', '2021-01-01', '1');
 INSERT INTO `codeinfo` VALUES (00000018, '20211880111', '全国计算机技术与软件专业技术资格(水平)考试. 系统分析师考试大纲', '全国计算机技术与软件专业技术资格(水平)考试办公室', '清华大学出版社', '2004-05-22', '1');
 INSERT INTO `codeinfo` VALUES (00000019, '20211880145', '简单减肥餐, 好吃不反弹', '\r\n萨巴蒂娜', '中国轻工业出版社', '2022-07-07', '1');
@@ -109,7 +109,7 @@ INSERT INTO `codeinfo` VALUES (00000022, '20211880166', '法医秦明. 幸存者
 INSERT INTO `codeinfo` VALUES (00000023, '20211880177', '中国书法史', '\r\n徐建融', '浙江人民美术出版社', '2021-11-01', '1');
 INSERT INTO `codeinfo` VALUES (00000024, '20211880199', '实用百草治百病', '\r\n宋纬文', '福建科学技术出版社', '2021-09-22', '1');
 INSERT INTO `codeinfo` VALUES (00000025, '20211880176', '烈火芳菲', '赵方新', '北京十月文艺出版社', '2022-01-22', '1');
-INSERT INTO `codeinfo` VALUES (00000026, '20211880184', '高等数学', '同济大学数学系', '高等教育出版社', '2021-07-07', '0');
+INSERT INTO `codeinfo` VALUES (00000026, '20211880184', '高等数学', '同济大学数学系', '高等教育出版社', '2021-07-07', '1');
 INSERT INTO `codeinfo` VALUES (00000027, '20211880192', '平凡的世界', '路遥', '北京十月文艺出版社', '2021-06-10', '1');
 
 -- ----------------------------
@@ -127,7 +127,7 @@ CREATE TABLE `lend_record`  (
   `borrownum` int(0) NOT NULL COMMENT '此书被借阅次数',
   `book_id` bigint(0) NULL DEFAULT NULL COMMENT '图书具体编号',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2030043138 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of lend_record
@@ -144,18 +144,18 @@ CREATE TABLE `specificbook`  (
   `status` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '1' COMMENT '0：未归还 1：已归还',
   `location` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '存放位置',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 32 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '具体书籍表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 27 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '具体书籍表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of specificbook
 -- ----------------------------
-INSERT INTO `specificbook` VALUES (00000009, '20211880115', '十万个为什么', '0', '01-04-22');
-INSERT INTO `specificbook` VALUES (00000010, '20211880119', '五万个为什么', '0', '02-28-23');
+INSERT INTO `specificbook` VALUES (00000009, '20211880115', '十万个为什么', '1', '01-04-22');
+INSERT INTO `specificbook` VALUES (00000010, '20211880119', '五万个为什么', '1', '02-28-23');
 INSERT INTO `specificbook` VALUES (00000011, '20211880106', '一万个为什么', '1', '03-15-21');
 INSERT INTO `specificbook` VALUES (00000012, '20211880114', '计算机操作系统', '1', '08-31-17');
 INSERT INTO `specificbook` VALUES (00000013, '20211880118', '伊索寓言', '1', '12-18-22');
 INSERT INTO `specificbook` VALUES (00000015, '20211880109', '格林童话', '1', '09-16-25');
-INSERT INTO `specificbook` VALUES (00000016, '20211880100', '图书管理系统', '0', '05-20-20');
+INSERT INTO `specificbook` VALUES (00000016, '20211880100', '图书管理系统', '1', '05-20-20');
 INSERT INTO `specificbook` VALUES (00000017, '20211880128', '和另一个自己谈谈心', '1', '04-12-24');
 INSERT INTO `specificbook` VALUES (00000018, '20211880111', '全国计算机技术与软件专业技术资格(水平)考试. 系统分析师考试大纲', '1', '11-09-23');
 INSERT INTO `specificbook` VALUES (00000019, '20211880145', '简单减肥餐, 好吃不反弹', '1', '12-18-22');
@@ -165,7 +165,7 @@ INSERT INTO `specificbook` VALUES (00000022, '20211880166', '法医秦明. 幸�
 INSERT INTO `specificbook` VALUES (00000023, '20211880177', '中国书法史', '1', '02-27-29');
 INSERT INTO `specificbook` VALUES (00000024, '20211880199', '实用百草治百病', '1', '12-04-25');
 INSERT INTO `specificbook` VALUES (00000025, '20211880176', '烈火芳菲', '1', '06-28-19');
-INSERT INTO `specificbook` VALUES (00000026, '20211880184', '高等数学', '0', '07-12-14');
+INSERT INTO `specificbook` VALUES (00000026, '20211880184', '高等数学', '1', '07-12-14');
 INSERT INTO `specificbook` VALUES (00000027, '20211880192', '平凡的世界', '1', '06-14-11');
 
 -- ----------------------------
@@ -183,7 +183,7 @@ CREATE TABLE `user`  (
   `role` int(0) NOT NULL COMMENT '角色、1：管理员 2：普通用户',
   `alow` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '是否允许借阅',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 32 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户信息表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 31 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户信息表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of user
