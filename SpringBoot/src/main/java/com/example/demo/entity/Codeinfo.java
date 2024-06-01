@@ -10,7 +10,7 @@ import java.util.Date;
 
 @TableName("codeInfo")
 @Data
-public class codeInfo {
+public class Codeinfo {
 
     @TableId (type = IdType.AUTO)
     private Integer id;
