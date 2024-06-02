@@ -13,7 +13,6 @@ import java.util.Date;
 public class BookWithUser {
     @TableId (type = IdType.AUTO)
     private Integer id;
-    private Integer readerId;
     private Integer bookId;
     private String isbn;
     private String bookName;
@@ -23,5 +22,4 @@ public class BookWithUser {
     @JsonFormat(locale="zh",timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")
     private Date deadtime;
     private Integer prolong;
-    private Integer status;
 }

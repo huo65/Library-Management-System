@@ -10,9 +10,11 @@ import com.example.demo.entity.Book;
 import com.example.demo.entity.BookWithUser;
 import com.example.demo.entity.Specificbook;
 import com.example.demo.entity.VO.SearchBookVO;
+import com.example.demo.entity.dto.BookAddDto;
 import com.example.demo.mapper.BookMapper;
 import com.example.demo.mapper.BookWithUserMapper;
 import com.example.demo.mapper.SpecificbookMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,45 +36,82 @@ public class BookController {
     @Resource
     SpecificbookMapper specificbookMapper;
 
+    /**
+     * 添加书本
+     * @param bookAddDto 书本信息
+     * @return result
+     */
     @PostMapping
-    public Result<?> save(@RequestBody Book book){
+    @Transactional
+    public Result<?> save(@RequestBody BookAddDto bookAddDto){
+
+        // 存放本书
+        Specificbook specificbook = new Specificbook();
+        BeanUtils.copyProperties(bookAddDto, specificbook);
+        specificbook.setStatus("1");
+        specificbookMapper.insert(specificbook);
+
+        // 书本归类，数量+1
         LambdaQueryWrapper<Book> wrapper = Wrappers.lambdaQuery();
-        wrapper.eq(Book::getIsbn,book.getIsbn());
+        wrapper.eq(Book::getIsbn,bookAddDto.getIsbn());
         Book selectOne = bookMapper.selectOne(wrapper);
         if (selectOne != null){
-            return Result.error("-1","图书编号已存在!");
+            // 同类书已存在
+            selectOne.setTotalNumber(selectOne.getTotalNumber() + 1);
+            selectOne.setLeftNumber(selectOne.getLeftNumber() + 1);
+            bookMapper.update(selectOne, wrapper);
+        }else{
+            // 新类书
+            Book book = new Book();
+            BeanUtils.copyProperties(bookAddDto, book);
+            book.setTotalNumber(1L);
+            book.setLeftNumber(1L);
+            book.setBorrownum(0);
+            bookMapper.insert(book);
         }
-        bookMapper.insert(book);
         return Result.success();
     }
+
+    /**
+     * 修改书本信息(仅能修改存放位置,其他信息不可修改)
+     * @param specificbook 书本信息
+     * @return result
+     */
     @PutMapping
-    public  Result<?> update(@RequestBody Book book){
-        LambdaQueryWrapper<Book> wrapper = Wrappers.lambdaQuery();
-        wrapper.eq(Book::getIsbn,book.getIsbn());
-        Book selectOne =  bookMapper.selectOne(wrapper);
-        if (selectOne != null){
-            return Result.error("-1","图书编号已存在!");
-        }
-         bookMapper.updateById(book);
+    public  Result<?> update(@RequestBody Specificbook specificbook){
+        // 仅能修改地址，所以只更新specific
+        specificbookMapper.updateById(specificbook);
         return Result.success();
     }
 
-
+    /**
+     * 删除书本
+     * @param id 书本id
+     * @return result
+     */
     @DeleteMapping("/{id}")
     @Transactional
     public Result<?> delete(@PathVariable Long id){
-        LambdaQueryWrapper<Book> wrapper = Wrappers.lambdaQuery();
-        wrapper.eq(Book::getIsbn,id);
-        Book book =  bookMapper.selectOne(wrapper);
-        LambdaQueryWrapper<BookWithUser> wrapper1 = Wrappers.lambdaQuery();
-        wrapper1.eq(BookWithUser::getIsbn,book.getIsbn());
-        BookWithUser bookWithUser = bookWithUserMapper.selectOne(wrapper1);
-        if (bookWithUser != null){
-            return Result.error("-1","书籍在借阅中,无法下架");
+        LambdaQueryWrapper<Specificbook> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(Specificbook::getIsbn, id);
+        Specificbook specificbook = specificbookMapper.selectOne(wrapper);
+        if ("0".equals(specificbook.getStatus())){
+            return Result.error("-1", "书本未归还，无法下架");
         }
-         bookMapper.deleteById(id);
+        specificbookMapper.deleteById(id);
+        LambdaQueryWrapper<Book> bookWrapper = Wrappers.lambdaQuery();
+        bookWrapper.eq(Book::getIsbn, specificbook.getIsbn());
+        Book book = bookMapper.selectOne(bookWrapper);
+        book.setTotalNumber(book.getTotalNumber() - 1);
+        book.setLeftNumber(book.getLeftNumber() - 1);
+        if (book.getTotalNumber() == 0) {
+            bookMapper.delete(bookWrapper);
+        }else{
+            bookMapper.update(book, bookWrapper);
+        }
         return Result.success();
     }
+
     @GetMapping
     public Result<?> findPage(
             @RequestParam(defaultValue = "1") Integer pageNum,
