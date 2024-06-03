@@ -8,11 +8,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.commom.Result;
 import com.example.demo.entity.Book;
 import com.example.demo.entity.BookWithUser;
+import com.example.demo.entity.DTO.BookAddDto;
 import com.example.demo.entity.Specificbook;
 import com.example.demo.entity.VO.SearchBookVO;
 import com.example.demo.mapper.BookMapper;
 import com.example.demo.mapper.BookWithUserMapper;
 import com.example.demo.mapper.SpecificbookMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,17 +36,48 @@ public class BookController {
     @Resource
     SpecificbookMapper specificbookMapper;
 
+    /**
+     * 添加书本
+     * @param bookAddDto 书本信息
+     * @return result
+     */
     @PostMapping
-    public Result<?> save(@RequestBody Book book){
+    @Transactional
+    public Result<?> save(@RequestBody BookAddDto bookAddDto){
+
+        // 存放本书
+        Specificbook specificbook = new Specificbook();
+        BeanUtils.copyProperties(bookAddDto, specificbook);
+        specificbook.setStatus("1");
+        specificbookMapper.insert(specificbook);
+
+        // 书本归类，数量+1
         LambdaQueryWrapper<Book> wrapper = Wrappers.lambdaQuery();
-        wrapper.eq(Book::getIsbn,book.getIsbn());
+        wrapper.eq(Book::getIsbn,bookAddDto.getIsbn());
         Book selectOne = bookMapper.selectOne(wrapper);
         if (selectOne != null){
-            return Result.error("-1","图书编号已存在!");
+            // 同类书已存在
+            selectOne.setTotalNumber(selectOne.getTotalNumber() + 1);
+            selectOne.setLeftNumber(selectOne.getLeftNumber() + 1);
+            bookMapper.update(selectOne, wrapper);
+        }else{
+            // 新类书
+            Book book = new Book();
+            BeanUtils.copyProperties(bookAddDto, book);
+            book.setTotalNumber(1L);
+            book.setLeftNumber(1L);
+            book.setBorrownum(0);
+            bookMapper.insert(book);
         }
-        bookMapper.insert(book);
         return Result.success();
     }
+//    借书 TODO 把借还逻辑集中在Special
+/*
+this.form.status = "0"
+this.form.id = id
+this.form.borrownum = bn + 1
+this.form.leftNumber = leftNumber - 1
+ */
     @PutMapping
     public  Result<?> update(@RequestBody Book book){
         LambdaQueryWrapper<Book> wrapper = Wrappers.lambdaQuery();
@@ -67,7 +100,7 @@ public class BookController {
         LambdaQueryWrapper<BookWithUser> wrapper1 = Wrappers.lambdaQuery();
         wrapper1.eq(BookWithUser::getIsbn,book.getIsbn());
         BookWithUser bookWithUser = bookWithUserMapper.selectOne(wrapper1);
-        if (bookWithUser != null){
+        if (bookWithUser != null && bookWithUser.getStatus() == 0){
             return Result.error("-1","书籍在借阅中,无法下架");
         }
          bookMapper.deleteById(id);

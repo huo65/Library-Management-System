@@ -22,6 +22,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 用户视图，只需要查
+ */
 @RestController
 @Slf4j
 @RequestMapping("/bookwithuser")
@@ -48,55 +51,16 @@ public class BookWithUserController {
         bookWithUserMapper.update(BookWithUser, updateWrapper);
         return Result.success();
     }
-//还书
+//还书（已废弃
     @PostMapping("/deleteRecord")
     @Transactional
     public  Result<?> deleteRecord(@RequestBody BookWithUser bookWithUser){
-        LambdaQueryWrapper<BookWithUser> bUwrapper = Wrappers.lambdaQuery();
-        bUwrapper.eq(BookWithUser::getId,bookWithUser.getId());
-        BookWithUser bU = bookWithUserMapper.selectOne(bUwrapper);
-        bU.setStatus(2);
-        bookWithUserMapper.updateById(bU);
-
-//        LambdaQueryWrapper<Book> wrapper = Wrappers.lambdaQuery();
-//        wrapper.eq(Book::getIsbn,bookWithUser.getIsbn());
-//        Book book = bookMapper.selectOne(wrapper);
-//        book.setLeftNumber(book.getLeftNumber()+1);
-//        bookMapper.updateById(book);
-
-        LambdaQueryWrapper<LendRecord> lendRecordLambdaQueryWrapper = Wrappers.lambdaQuery();
-        lendRecordLambdaQueryWrapper.eq(LendRecord::getIsbn,bookWithUser.getIsbn());
-        lendRecordLambdaQueryWrapper.eq(LendRecord::getLendTime,bookWithUser.getLendtime());
-        LendRecord lendRecord = lendRecordMapper.selectOne(lendRecordLambdaQueryWrapper);
-        lendRecord.setStatus("2");
-        lendRecordMapper.updateById(lendRecord);
-
         return Result.success();
     }
 
     @PostMapping("/deleteRecords")
     @Transactional
     public Result<?> deleteRecords(@RequestBody List<BookWithUser> BookWithUsers){
-//        Date date = new java.util.Date();//获取当前时间对象，也可以直接传入Date的对象
-//        for (BookWithUser curRecord : BookWithUsers) {
-//            Map<String, Object> map = new HashMap<>();
-//            map.put("isbn", curRecord.getIsbn());
-//            map.put("reader_id", curRecord.getId());
-//            bookWithUserMapper.deleteByMap(map);
-//            LambdaQueryWrapper<Book> wrapper = Wrappers.lambdaQuery();
-//            wrapper.eq(Book::getIsbn,curRecord.getIsbn());
-//            Book book = bookMapper.selectOne(wrapper);
-////            book.setStatus("1"); //归还
-//            book.setLeftNumber(book.getLeftNumber()+1);
-//            bookMapper.updateById(book);
-//
-//            LambdaQueryWrapper<LendRecord> wrapper1 = Wrappers.lambdaQuery();
-//            wrapper1.eq(LendRecord::getReaderId,curRecord.getId()).eq(LendRecord::getIsbn,curRecord.getIsbn()).eq(LendRecord::getStatus,"0");
-//            LendRecord lendRecord = lendRecordMapper.selectOne(wrapper1);
-//            lendRecord.setStatus("1");  //归还
-//            lendRecord.setReturnTime(date);
-//            lendRecordMapper.updateById(lendRecord);
-//        }
         return Result.success();
     }
     @GetMapping

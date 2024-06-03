@@ -28,14 +28,7 @@
         </el-form-item>
       </el-form>
     </div>
-<!--    &lt;!&ndash; 按钮&ndash;&gt;-->
-<!--    <div style="margin: 10px 0;" >-->
-<!--      <el-popconfirm title="Confirm return?" @confirm="deleteBatch" v-if="user.role == 3">-->
-<!--        <template #reference>-->
-<!--          <el-button type="danger" size="mini" >Multi return</el-button>-->
-<!--        </template>-->
-<!--      </el-popconfirm>-->
-<!--    </div>-->
+
     <!-- 数据字段-->
     <el-table :data="tableData" stripe border="true" @selection-change="handleSelectionChange">
       <el-table-column v-if="user.role ==3"
@@ -48,12 +41,7 @@
       <el-table-column prop="lendtime" label="Borrowing date" />
       <el-table-column prop="deadtime" label="Latest return date" />
       <el-table-column prop="prolong" label="Renewable time" />
-<!--      <el-table-column prop="leftNumber" label="leftNumber">-->
-<!--        <template v-slot="scope">-->
-<!--          <el-tag v-if="scope.row.status == 1" type="warning">已归还</el-tag>-->
-<!--          <el-tag v-else type="success">Not borrowed</el-tag>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
+
       <el-table-column fixed="right" label="Operation" >
         <template v-slot="scope">
           <!--          <el-button  size="mini" @click ="handleEdit(scope.row)" v-if="user.role == 1">Modify </el-button>-->
@@ -198,7 +186,7 @@ export default {
     },
     handleReturn(row){
       const form3 = JSON.parse(JSON.stringify(row))
-      // 修改为apply return status = 2
+      // 修改为apply return status = 2 TODO 消除用户的还书
       request.post("bookwithuser/deleteRecord",form3).then(res =>{
         console.log(res)
         // if(res.code == 0 ){

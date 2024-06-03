@@ -59,11 +59,6 @@
     <!-- 按钮-->
     <div style="margin: 10px 0;">
       <el-button type="primary" @click="add" v-if="user.role == 2">Go onto</el-button>
-      <el-popconfirm title="Confirm Take down?" @confirm="deleteBatch" v-if="user.role == 2">
-        <template #reference>
-          <el-button type="danger" size="mini">Multi take down</el-button>
-        </template>
-      </el-popconfirm>
     </div>
     <!-- 数据字段-->
     <el-table :data="tableData" stripe border="true" @selection-change="handleSelectionChange">
@@ -73,45 +68,28 @@
       </el-table-column>
       <el-table-column prop="isbn" label="ISBN" sortable />
       <el-table-column prop="name" label="Book name"/>
-      <el-table-column prop="price" label="Price" sortable width="80%"/>
       <el-table-column prop="author" label="author" width="80%"/>
       <el-table-column prop="publisher" label="Publisher"/>
-<!--      <el-table-column prop="createTime" label="Date of publication" sortable/>-->
-      <el-table-column prop="location" label="Location" width="90%"/>
       <el-table-column prop="borrownum" label="Borrowed time" sortable v-if="user.role == 2 " width="90%"/>
-
-<!--      <el-table-column prop="leftNumber" label="leftNumber">-->
-<!--        <template v-slot="scope">-->
-<!--          <el-tag v-if="scope.row.leftNumber == 1" type="warning">Borrowed</el-tag>-->
-<!--          <el-tag v-else type="success">Not borrowed</el-tag>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
       <el-table-column prop="totalNumber" label="Total" sortable width="90%"/>
       <el-table-column prop="leftNumber" label="Remaining" sortable />
       <el-table-column fixed="right" label="Operation">
         <template v-slot="scope">
-          <el-button size="mini" @click="handleEdit(scope.row)" v-if="user.role == 2">Modify</el-button>
+<!--          <el-button size="mini" @click="handleEdit(scope.row)" v-if="user.role == 2">Modify</el-button>-->
           <el-popconfirm title="Confirm Take down?" @confirm="handleDelete(scope.row.id)" v-if="user.role == 2">
             <template #reference>
               <el-button type="danger" size="mini">Take down</el-button>
             </template>
           </el-popconfirm>
-          <el-button size="mini" @click="handlelend(scope.row.id,scope.row.isbn,scope.row.name,scope.row.borrownum,scope.row.leftNumber)"
-                     v-if="user.role == 3 " :disabled="scope.row.leftNumber == 0">borrow
+<!--          用户查看详情-->
+          <el-button size="mini" @click="handleSpecific(scope.row.specificbooks)"
+                     v-if="user.role == 3 ">Specific
           </el-button>
-<!--          <el-popconfirm title="Confirm Return?"-->
-<!--                         @confirm="handlereturn(scope.row.id,scope.row.isbn,scope.row.borrownum)" v-if="user.role == 3 "-->
-<!--                         :disabled="scope.row.status == 1">-->
-<!--            <template #reference>-->
-<!--              <el-button type="danger" size="mini"-->
-<!--                         :disabled="(this.isbnArray.indexOf(scope.row.isbn)) == -1 ||scope.row.status == 1">Return-->
-<!--              </el-button>-->
-<!--            </template>-->
-<!--          </el-popconfirm>-->
+
         </template>
       </el-table-column>
     </el-table>
-    <!--测试,通知对话框-->
+    <!--过期提醒-->
     <el-dialog
         v-model="dialogVisible3"
         v-if="numOfOutDataBook!=0"
@@ -146,17 +124,30 @@
       >
       </el-pagination>
 
+<!--      管理员添加-->
       <el-dialog v-model="dialogVisible" title="Go onto book " width="30%">
-        <el-form :model="form" label-width="120px">
+        <div>
+          <el-upload
+              class="upload-demo"
+              action="javascript:void(0);"
+              :before-upload="beforeUpload"
+          >
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+          </el-upload>
+          <img v-if="imageUrl" :src="imageUrl" alt="Preview" style="max-width: 300px;">
 
+        </div>
+
+        <el-form :model="form" label-width="120px">
+          <el-form-item label="BookId">
+            <el-input style="width: 80%" v-model="form.id"></el-input>
+          </el-form-item>
           <el-form-item label="ISBN">
             <el-input style="width: 80%" v-model="form.isbn"></el-input>
           </el-form-item>
           <el-form-item label="Book name">
             <el-input style="width: 80%" v-model="form.name"></el-input>
-          </el-form-item>
-          <el-form-item label="Price">
-            <el-input style="width: 80%" v-model="form.price"></el-input>
           </el-form-item>
           <el-form-item label="author">
             <el-input style="width: 80%" v-model="form.author"></el-input>
@@ -164,10 +155,11 @@
           <el-form-item label="Publisher">
             <el-input style="width: 80%" v-model="form.publisher"></el-input>
           </el-form-item>
+<!--          自己填写-->
           <el-form-item label="location">
             <el-input style="width: 80%" v-model="form.location"></el-input>
           </el-form-item>
-          <el-form-item label="Date of publication">
+          <el-form-item label="Date publication">
             <div>
               <el-date-picker value-format="YYYY-MM-DD" type="date" style="width: 80%" clearable
                               v-model="form.createTime"></el-date-picker>
@@ -181,7 +173,7 @@
       </span>
         </template>
       </el-dialog>
-
+<!--管理员编辑-->
       <el-dialog v-model="dialogVisible2" title="Modify book info" width="30%">
         <el-form :model="form" label-width="120px">
 
@@ -207,6 +199,37 @@
             </div>
           </el-form-item>
         </el-form>
+        <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogVisible = false">Cancel</el-button>
+        <el-button type="primary" @click="save">Confirm</el-button>
+      </span>
+        </template>
+      </el-dialog>
+<!--      图书详情展示-->
+      <el-dialog v-model="bookdialogVisible" title="Specific Book info" width="50%">
+        <el-table :data="bookTableData" stripe border="true" >
+
+          <el-table-column prop="id" label="Book ID" sortable />
+          <el-table-column prop="isbn" label="ISBN" sortable />
+          <el-table-column prop="name" label="Book name"/>
+          <el-table-column prop="location" label="Location"/>
+          <el-table-column fixed="right" label="Operation">
+            <template v-slot="scope">
+              <!--          <el-button size="mini" @click="handleEdit(scope.row)" v-if="user.role == 2">Modify</el-button>-->
+              <el-popconfirm title="Confirm Take down?" @confirm="handleDelete(scope.row.id)" v-if="user.role == 2">
+                <template #reference>
+                  <el-button type="danger" size="mini">Take down</el-button>
+                </template>
+              </el-popconfirm>
+              <!--          用户借书-->
+              <el-button size="mini" @click="handlelend(scope.row.id,scope.row.isbn,scope.row.name,scope.row.borrownum,scope.row.leftNumber)"
+                         v-if="user.role == 3 " :disabled="scope.row.leftNumber == 0">borrow
+              </el-button>
+
+            </template>
+          </el-table-column>
+        </el-table>
         <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogVisible = false">Cancel</el-button>
@@ -274,58 +297,58 @@ export default {
         this.tableData = res.data.records
         this.total = res.data.total
       })
+      // 当用户登录，查用户视图记录判断过期
+      // if (this.user.role == 3) {
+      //   request.get("/bookwithuser", {
+      //     params: {
+      //       pageNum: "1",
+      //       pageSize: this.total,
+      //       search1: "",
+      //       search2: "",
+      //       search3: this.user.id,
+      //     }
+      //   }).then(res => {
+      //     //  判断过期逻辑
+      //     console.log(res)
+      //     this.bookData = res.data.records
+      //     this.number = this.bookData.length;
+      //     var nowDate = new Date();
+      //     for (let i = 0; i < this.number; i++) {
+      //       this.isbnArray[i] = this.bookData[i].isbn;
+      //       let dDate = new Date(this.bookData[i].deadtime);
+      //       if (dDate < nowDate && this.bookData[i].status == '0') {
+      //         this.outDateBook[this.numOfOutDataBook] = {
+      //           isbn: this.bookData[i].isbn,
+      //           bookName: this.bookData[i].bookName,
+      //           deadtime: this.bookData[i].deadtime,
+      //           lendtime: this.bookData[i].lendtime,
+      //           buID : this.bookData[i].id
+      //         };
+      //         this.numOfOutDataBook = this.numOfOutDataBook + 1;
+      //       }
+      //     }
+      //     // 后端同步
+      //     let fineForm = [];
+      //     for (let i = 0; i < this.numOfOutDataBook; i++){
+      //       let now = moment();
+      //       let daysDifference = now.diff(this.outDateBook[i].deadtime, 'days');
+      //       fineForm[i] = {
+      //         // id: 100,
+      //         isbn : this.outDateBook[i].isbn,
+      //         bookname:this.outDateBook[i].bookName,
+      //         readerid : this.user.id,
+      //         readername : this.user.username,
+      //         number : daysDifference,
+      //         status: 0,
+      //         buID: this.outDateBook[i].buID,
+      //       }
+      //     }
+      //     request.post("/fine/add", fineForm).then(res => {
+      //       console.log(res)
+      //     })
       //
-      if (this.user.role == 3) {
-        request.get("/bookwithuser", {
-          params: {
-            pageNum: "1",
-            pageSize: this.total,
-            search1: "",
-            search2: "",
-            search3: this.user.id,
-          }
-        }).then(res => {
-          // TODO 判断过期逻辑
-          console.log(res)
-          this.bookData = res.data.records
-          this.number = this.bookData.length;
-          var nowDate = new Date();
-          for (let i = 0; i < this.number; i++) {
-            this.isbnArray[i] = this.bookData[i].isbn;
-            let dDate = new Date(this.bookData[i].deadtime);
-            if (dDate < nowDate && this.bookData[i].status == '0') {
-              this.outDateBook[this.numOfOutDataBook] = {
-                isbn: this.bookData[i].isbn,
-                bookName: this.bookData[i].bookName,
-                deadtime: this.bookData[i].deadtime,
-                lendtime: this.bookData[i].lendtime,
-                buID : this.bookData[i].id
-              };
-              this.numOfOutDataBook = this.numOfOutDataBook + 1;
-            }
-          }
-          // 后端同步
-          let fineForm = [];
-          for (let i = 0; i < this.numOfOutDataBook; i++){
-            let now = moment();
-            let daysDifference = now.diff(this.outDateBook[i].deadtime, 'days');
-            fineForm[i] = {
-              // id: 100,
-              isbn : this.outDateBook[i].isbn,
-              bookname:this.outDateBook[i].bookName,
-              readerid : this.user.id,
-              readername : this.user.username,
-              number : daysDifference,
-              status: 0,
-              buID: this.outDateBook[i].buID,
-            }
-          }
-          request.post("/fine/add", fineForm).then(res => {
-            console.log(res)
-          })
-
-        })
-      }
+      //   })
+      // }
       //判断是否具有borrow权力
       request.get("/user/alow/" + this.user.id).then(res => {
         if (res.code == 0) {
@@ -341,7 +364,10 @@ export default {
       this.search3 = ""
       this.load()
     },
-
+    handleSpecific(specificbooks){
+      this.bookdialogVisible = true;
+      this.bookTableData = specificbooks;
+    } ,
     handleDelete(id) {
       request.delete("book/" + id).then(res => {
         console.log(res)
@@ -352,47 +378,8 @@ export default {
         this.load()
       })
     },
-    handlereturn(id, isbn, bn) {
-      this.form.status = "1"
-      this.form.id = id
-      request.put("/book", this.form).then(res => {
-        console.log(res)
-        if (res.code == 0) {
-          ElMessage({
-            message: 'Return success',
-            type: 'success',
-          })
-        } else {
-          ElMessage.error(res.msg)
-        }
-        //
-        this.form3.isbn = isbn
-        this.form3.readerId = this.user.id
-        let endDate = moment(new Date()).format("yyyy-MM-DD HH:mm:ss")
-        this.form3.returnTime = endDate
-        this.form3.status = "1"
-        console.log(bn)
-        this.form3.borrownum = bn
-        request.put("/LendRecord1/", this.form3).then(res => {
-          console.log(res)
-          let form3 = {};
-          form3.isbn = isbn;
-          form3.bookName = name;
-          form3.nickName = this.user.username;
-          form3.id = this.user.id;
-          form3.lendtime = endDate;
-          form3.deadtime = endDate;
-          form3.prolong = 1;
-          request.post("/bookwithuser/deleteRecord", form3).then(res => {
-            console.log(res)
-            this.load()
-          })
 
-        })
-        //
-      })
-    },
-
+    // TODO 借书逻辑，先解决书的展示
     handlelend(id, isbn, name, bn,leftNumber) {
 
       if (this.phone == null) {
@@ -441,8 +428,6 @@ export default {
       this.form2.bookname = name
       this.form2.readerId = this.user.id
       this.form2.borrownum = bn + 1
-      console.log(this.form2.borrownum)
-      console.log(this.user)
       let startDate = moment(new Date()).format("yyyy-MM-DD HH:mm:ss");
       this.form2.lendTime = startDate
       console.log(this.user)
@@ -470,11 +455,16 @@ export default {
       this.dialogVisible = true
       this.form = {}
     },
+    handleEdit(row) {
+      this.form = JSON.parse(JSON.stringify(row))
+      this.dialogVisible2 = true
+    },
+    // 添加或者更新
     save() {
       //ES6语法
       //地址,但是？IP与端口？+请求参数
       // this.form?这是自动保存在form中的，虽然显示时没有使用，但是这个对象中是有它的
-      if (this.form.id) {
+      if (this.form.id == -1) {
         request.put("/book", this.form).then(res => {
           console.log(res)
           if (res.code == 0) {
@@ -505,14 +495,6 @@ export default {
       }
 
     },
-    // formatter(row) {:formatter="formatter"
-    //   return row.address
-    // },
-
-    handleEdit(row) {
-      this.form = JSON.parse(JSON.stringify(row))
-      this.dialogVisible2 = true
-    },
     handleSizeChange(pageSize) {
       this.pageSize = pageSize
       this.load()
@@ -524,7 +506,49 @@ export default {
     toLook() {
       this.dialogVisible3 = true;
     },
+    beforeUpload(file) {
+      const isJPGorPNG = file.type === 'image/jpeg' || file.type === 'image/png';
+      const isLt500K = file.size / 1024 < 5000;
+
+      if (!isJPGorPNG) {
+        console.error('上传图片只能是 JPG/PNG 格式!');
+      }
+      if (!isLt500K) {
+        console.error('上传图片大小不能超过 500KB!');
+      }
+
+      if (isJPGorPNG && isLt500K) {
+        // 将图片转换为base64
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          this.imageUrl = reader.result; // 用于预览
+          // 发送请求
+          this.sendToBackend(reader.result);
+        };
+        return false; // 阻止默认上传行为
+      }
+    },
+    async sendToBackend(imageBase64) {
+      try {
+        // 注意：实际开发中应使用POST请求，并且可能需要调整后端接口以接收base64字符串
+        request.post("barCode/getId",imageBase64).then(res=>{
+          if(res.code == 0)
+          {
+            let value = res.data
+            console.log(value)
+            this.form = value;
+            console.log(res)
+          }
+          else {ElMessage.error("错误")}
+        })
+        // 这里可以处理后端返回的数据
+      } catch (error) {
+        console.error('请求错误:', error);
+      }
+    },
   },
+  // 上一个
   data() {
     return {
       phone: '',
@@ -534,6 +558,8 @@ export default {
       form3: {},
       dialogVisible: false,
       dialogVisible2: false,
+      bookdialogVisible:false,
+      bookTableData:{},
       search1: '',
       search2: '',
       search3: '',
@@ -548,6 +574,7 @@ export default {
       outDateBook: [],
       numOfOutDataBook: 0,
       dialogVisible3: true,
+      imageUrl: '', // 用于预览的图片base64编码
     }
   },
 }

@@ -20,7 +20,7 @@ public class Specificbook implements Serializable {
     /**
      * ID
      */
-    @TableId(type = IdType.AUTO)
+    @TableId
     private Integer id;
 
     /**

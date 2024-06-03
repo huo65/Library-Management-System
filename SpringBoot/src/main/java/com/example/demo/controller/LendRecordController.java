@@ -6,14 +6,8 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.commom.Result;
-import com.example.demo.entity.Book;
-import com.example.demo.entity.BookWithUser;
-import com.example.demo.entity.LendRecord;
-import com.example.demo.entity.User;
-import com.example.demo.mapper.BookMapper;
-import com.example.demo.mapper.BookWithUserMapper;
-import com.example.demo.mapper.LendRecordMapper;
-import com.example.demo.mapper.UserMapper;
+import com.example.demo.entity.*;
+import com.example.demo.mapper.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +17,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 管理员视图
+ * - 手动还书
+ * - 修改记录
+ */
 @RestController
 @RequestMapping("/LendRecord")
 @Slf4j
@@ -38,52 +37,46 @@ public class LendRecordController {
     @Resource
     BookMapper bookMapper;
 
-    @DeleteMapping("/{isbn}")
-    public Result<?> delete(@PathVariable String isbn){
-        Map<String,Object> map = new HashMap<>();
-        map.put("isbn",isbn);
-        LendRecordMapper.deleteByMap(map);
-        return Result.success();
-    }
-    //删除一条记录(no 是还书
+    @Resource
+    SpecificbookMapper specificbookMapper;
+
+    //还书接口，尽量管理端借书记录页面不变
     @PostMapping("/deleteRecord")
-    public  Result<?> deleteRecord(@RequestBody LendRecord lendRecord){
+    public  Result<?> returnBook(@RequestBody LendRecord lendRecord){
         log.info("########################接受参数"+lendRecord);
+//        记录表
         LambdaQueryWrapper<LendRecord> lendRecordLambdaQueryWrapper = Wrappers.lambdaQuery();
-        lendRecordLambdaQueryWrapper.eq(LendRecord::getIsbn,lendRecord.getIsbn());
-        lendRecordLambdaQueryWrapper.eq(LendRecord::getReaderId,lendRecord.getReaderId());
-        lendRecordLambdaQueryWrapper.eq(LendRecord::getLendTime,lendRecord.getLendTime());
+        lendRecordLambdaQueryWrapper.eq(LendRecord::getId,lendRecord.getId());
         LendRecord record = LendRecordMapper.selectOne(lendRecordLambdaQueryWrapper);
         record.setStatus("1");
         record.setReturnTime(new Date());
         LendRecordMapper.updateById(record);
-
+//        用户记录表,使用bookid 和 readerid 借用时间确定记录
         LambdaQueryWrapper<BookWithUser> bUwrapper = Wrappers.lambdaQuery();
-        bUwrapper.eq(BookWithUser::getIsbn,lendRecord.getIsbn());
+        bUwrapper.eq(BookWithUser::getBookId,lendRecord.getBookId());
+        bUwrapper.eq(BookWithUser::getReaderId,lendRecord.getReaderId());
         bUwrapper.eq(BookWithUser::getLendtime,lendRecord.getLendTime());
         BookWithUser bU = bookWithUserMapper.selectOne(bUwrapper);
         bU.setStatus(1);
         bookWithUserMapper.updateById(bU);
-
+//      图书表
         LambdaQueryWrapper<Book> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(Book::getIsbn,lendRecord.getIsbn());
         Book book = bookMapper.selectOne(wrapper);
         book.setLeftNumber(book.getLeftNumber()+1);
         bookMapper.updateById(book);
+//        具体图书
+        Specificbook specificbook = specificbookMapper.selectById(lendRecord.getBookId());
+        specificbook.setStatus("1");
         return Result.success();
     }
     @PostMapping("/deleteRecords")
     public Result<?> deleteRecords(@RequestBody List<LendRecord> LendRecords){
-//        for (LendRecord curRecord : LendRecords) {
-//            Map<String, Object> map = new HashMap<>();
-//            map.put("isbn", curRecord.getIsbn());
-//            map.put("borrownum", curRecord.getBorrownum());
-//            LendRecordMapper.deleteByMap(map);
-//        }
         return Result.success();
     }
+//    借书（废弃
     @PostMapping
-    public Result<?> save(@RequestBody LendRecord LendRecord){
+    public Result<?> lendBook(@RequestBody LendRecord LendRecord){
         LendRecordMapper.insert(LendRecord);
         return Result.success();
     }
@@ -139,6 +132,7 @@ public class LendRecordController {
         LendRecordMapper.update(lendrecord, updateWrapper);
         return Result.success();
     }
+
     @PutMapping
     public  Result<?> update(@RequestBody LendRecord lendRecord){
         log.info("########################接受参数"+lendRecord);

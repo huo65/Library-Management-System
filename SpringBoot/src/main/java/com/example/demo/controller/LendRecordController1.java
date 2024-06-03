@@ -12,6 +12,9 @@ import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+/**
+ * 管理员批量还书
+ */
 @RestController
 @Slf4j
 @RequestMapping("/LendRecord1")
