@@ -75,15 +75,10 @@
       <el-table-column prop="leftNumber" label="Remaining" sortable />
       <el-table-column fixed="right" label="Operation">
         <template v-slot="scope">
-<!--          <el-button size="mini" @click="handleEdit(scope.row)" v-if="user.role == 2">Modify</el-button>-->
-          <el-popconfirm title="Confirm Take down?" @confirm="handleDelete(scope.row.id)" v-if="user.role == 2">
-            <template #reference>
-              <el-button type="danger" size="mini">Take down</el-button>
-            </template>
-          </el-popconfirm>
+
 <!--          用户查看详情-->
           <el-button size="mini" @click="handleSpecific(scope.row.specificbooks)"
-                     v-if="user.role == 3 ">Specific
+                     >Specific
           </el-button>
 
         </template>
