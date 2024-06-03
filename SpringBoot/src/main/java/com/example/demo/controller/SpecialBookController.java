@@ -28,18 +28,13 @@ public class SpecialBookController {
     @Resource
     BookMapper bookMapper;
 
-    @Resource
-    BookWithUserMapper bookWithUserMapper;
-
-    @Resource
-    LendRecordMapper lendRecordMapper;
     @PostMapping("/borrow")
     public  Result<?> update(@RequestBody Specificbook specificbook){
 //        具体图书
         LambdaQueryWrapper<Specificbook> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(Specificbook::getId,specificbook.getId());
         Specificbook selectOne =  specificbookMapper.selectOne(wrapper);
-        if (selectOne != null){
+        if (selectOne == null){
             return Result.error("-1","借书失败01!");
         }
         selectOne.setStatus("0");
@@ -48,13 +43,13 @@ public class SpecialBookController {
         LambdaQueryWrapper<Book> bookWrapper = Wrappers.lambdaQuery();
         bookWrapper.eq(Book::getIsbn,specificbook.getIsbn());
         Book selectOneBook =  bookMapper.selectOne(bookWrapper);
-        if (selectOneBook != null){
+        if (selectOneBook == null){
             return Result.error("-1","借书失败02!");
         }
         selectOneBook.setBorrownum(selectOneBook.getBorrownum() + 1);
-        selectOneBook.setLeftNumber(selectOneBook.getLeftNumber() + 1);
+        selectOneBook.setLeftNumber(selectOneBook.getLeftNumber() - 1);
         bookMapper.updateById(selectOneBook);
-//        插入记录，由BookWithUser，
+//        插入记录，由BookWithUser，Len完成
         return Result.success();
     }
 }

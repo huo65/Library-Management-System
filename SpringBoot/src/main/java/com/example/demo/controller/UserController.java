@@ -54,6 +54,7 @@ public class UserController {
         {
             return Result.error("-1","用户名已重复");
         }
+        user.setAlow("1");
         userMapper.insert(user);
         return Result.success();
     }

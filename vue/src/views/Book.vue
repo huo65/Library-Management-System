@@ -223,8 +223,8 @@
                 </template>
               </el-popconfirm>
               <!--          用户借书-->
-              <el-button size="mini" @click="handlelend(scope.row.id,scope.row.isbn,scope.row.name,scope.row.borrownum,scope.row.leftNumber)"
-                         v-if="user.role == 3 " :disabled="scope.row.leftNumber == 0">borrow
+              <el-button size="mini" @click="handlelend(scope.row.id,scope.row.isbn,scope.row.name,scope.row.status,scope.row.location)"
+                         v-if="user.role == 3 " :disabled="scope.row.status == 0">borrow
               </el-button>
 
             </template>
@@ -380,7 +380,7 @@ export default {
     },
 
     // TODO 借书逻辑，先解决书的展示
-    handlelend(id, isbn, name, bn,leftNumber) {
+    handlelend(id, isbn, name,status, location) {
 
       if (this.phone == null) {
         ElMessage.error("Borrow failed! Please complete your user profile!")
@@ -406,14 +406,47 @@ export default {
         return;
       }
 
-      this.form.status = "0"
-      this.form.id = id
-      this.form.borrownum = bn + 1
-      this.form.leftNumber = leftNumber - 1
-      console.log(bn)
-      request.put("/book", this.form).then(res => {
+      let specificbook = {};
+      specificbook.id = id;
+      specificbook.isbn = isbn;
+      specificbook.name = name
+      specificbook.status = status;
+      specificbook.location = location;
+      console.log(specificbook)
+      request.post("/specificbook/borrow", specificbook).then(res => {
         console.log(res)
         if (res.code == 0) {
+
+          // 插入两表记录
+          this.form2.bookId = id;
+          this.form2.readerId = this.user.id;
+          this.form2.isbn = isbn;
+          this.form2.bookname = name;
+          let startDate = moment(new Date()).format("yyyy-MM-DD HH:mm:ss");
+          this.form2.lendTime = startDate;
+          this.form2.returnTime = null;
+          this.form2.status = "0"
+          console.log(this.user)
+          request.post("/LendRecord", this.form2).then(res => {
+            console.log(res)
+            this.load();
+          })
+          let form3 = {};
+          form3.readerId = this.user.id;
+          form3.bookId = id;
+          form3.isbn = isbn;
+          form3.bookName = name;
+          form3.nickName = this.user.username;
+          form3.lendtime = startDate;
+          let nowDate = new Date(startDate);
+          nowDate.setDate(nowDate.getDate() + 30);
+          form3.deadtime = moment(nowDate).format("yyyy-MM-DD HH:mm:ss");
+          form3.prolong = 1;
+          this.form2.status = 0;
+          request.post("/bookwithuser/insertNew", form3).then(res => {
+            console.log(res)
+            this.load()
+          })
           ElMessage({
             message: 'Borrow success',
             type: 'success',
@@ -423,33 +456,7 @@ export default {
         }
       })
 
-      this.form2.status = "0"
-      this.form2.isbn = isbn
-      this.form2.bookname = name
-      this.form2.readerId = this.user.id
-      this.form2.borrownum = bn + 1
-      let startDate = moment(new Date()).format("yyyy-MM-DD HH:mm:ss");
-      this.form2.lendTime = startDate
-      console.log(this.user)
-      request.post("/LendRecord", this.form2).then(res => {
-        console.log(res)
-        this.load();
 
-      })
-      let form3 = {};
-      form3.isbn = isbn;
-      form3.bookName = name;
-      form3.nickName = this.user.username;
-      form3.readerId = this.user.id;
-      form3.lendtime = startDate;
-      let nowDate = new Date(startDate);
-      nowDate.setDate(nowDate.getDate() + 30);
-      form3.deadtime = moment(nowDate).format("yyyy-MM-DD HH:mm:ss");
-      form3.prolong = 1;
-      request.post("/bookwithuser/insertNew", form3).then(res => {
-        console.log(res)
-        this.load()
-      })
     },
     add() {
       this.dialogVisible = true

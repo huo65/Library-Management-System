@@ -74,10 +74,10 @@ public class LendRecordController {
     public Result<?> deleteRecords(@RequestBody List<LendRecord> LendRecords){
         return Result.success();
     }
-//    借书（废弃
+//    借书
     @PostMapping
-    public Result<?> lendBook(@RequestBody LendRecord LendRecord){
-        LendRecordMapper.insert(LendRecord);
+    public Result<?> lendBook(@RequestBody LendRecord lendRecord){
+        LendRecordMapper.insert(lendRecord);
         return Result.success();
     }
     @GetMapping

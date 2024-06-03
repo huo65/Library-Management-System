@@ -24,7 +24,7 @@ public class LendRecord {
     @JsonFormat(locale="zh",timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")
     private Date returnTime;
     private String status;
-    private Integer borrownum;
+//    private Integer borrownum;
     @TableField(exist = false)
     private String readername;
 
