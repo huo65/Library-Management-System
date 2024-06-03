@@ -31,11 +31,8 @@
 
     <!-- 数据字段-->
     <el-table :data="tableData" stripe border="true" @selection-change="handleSelectionChange">
-      <el-table-column v-if="user.role ==3"
-          type="selection"
-          width="55">
-      </el-table-column>
-      <el-table-column prop="isbn" label="ISBN" sortable />
+
+      <el-table-column prop="isbn" label="ISBN"  />
       <el-table-column prop="bookName" label="Book name" />
       <el-table-column prop="nickName" label="Borrower" />
       <el-table-column prop="lendtime" label="Borrowing date" />
@@ -49,11 +46,7 @@
             <el-tag v-if="scope.row.status == 1" type="warning">returned</el-tag>
           </div>
           <div v-else-if = "scope.row.status == 0">
-          <el-popconfirm title="Apply return?" @confirm="handleReturn(scope.row) " v-if="user.role == 3" >
-            <template #reference>
-              <el-button type="danger" size="mini" >return</el-button>
-            </template>
-          </el-popconfirm>
+
           <el-popconfirm title="Confirm renew(30 days)?" @confirm="handlereProlong(scope.row)" v-if="user.role == 3" :disabled="scope.row.prolong == 0">
             <template #reference>
               <el-button type="danger" size="mini" :disabled="scope.row.prolong == 0" >renew</el-button>
@@ -183,31 +176,6 @@ export default {
       this.search2 = ""
       this.search3 = ""
       this.load()
-    },
-    handleReturn(row){
-      const form3 = JSON.parse(JSON.stringify(row))
-      // 修改为apply return status = 2 TODO 消除用户的还书
-      request.post("bookwithuser/deleteRecord",form3).then(res =>{
-        console.log(res)
-        // if(res.code == 0 ){
-        //   let endDate = moment(new Date()).format("yyyy-MM-DD HH:mm:ss")
-        //   let recordForm = {};
-        //   recordForm.isbn = form3.isbn;
-        //   recordForm.readerId = form3.readerId
-        //   recordForm.lendTime = form3.lendtime
-        //   recordForm.returnTime = endDate
-        //   recordForm.status = "1"
-        //   request.put("/LendRecord1/", recordForm).then(res => {
-        //     console.log(res)
-        //   })
-        //
-        //   ElMessage.success("return success")
-        // }
-        // else
-        //   ElMessage.error(res.msg)
-
-        this.load()
-      })
     },
     handlereProlong(row){
       var nowDate = new Date(row.deadtime);
