@@ -44,6 +44,7 @@ public class BookWithUserController {
         bookWithUserMapper.insert(BookWithUser);
         return Result.success();
     }
+//    前端续借 TODO 同步
     @PostMapping
     public Result<?> update(@RequestBody BookWithUser BookWithUser){
         UpdateWrapper<BookWithUser> updateWrapper = new UpdateWrapper<>();

@@ -124,7 +124,7 @@
             >
             </el-date-picker>
           </el-form-item>
-          <el-form-item label="归还时间">
+          <el-form-item label="returnTime">
 
             <el-date-picker
                 v-model="form.returnTime"
@@ -204,6 +204,7 @@ export default defineComponent({
       })
     },
     save(form) {
+        // TODO 同步
         request.put("/LendRecord/" , this.form).then(res => {
           console.log(res)
           if (res.code == 0) {

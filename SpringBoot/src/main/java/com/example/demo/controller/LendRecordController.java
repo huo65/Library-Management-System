@@ -112,6 +112,7 @@ public class LendRecordController {
     }
 
     @PutMapping("/{isbn}")
+//   TODO  同步 修改图书状态
     public  Result<?> update(@PathVariable String isbn,@RequestBody LendRecord lendRecord){
         UpdateWrapper<LendRecord> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("isbn",isbn);

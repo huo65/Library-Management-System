@@ -178,6 +178,7 @@ export default {
       this.load()
     },
     handlereProlong(row){
+      // TODO 同步
       var nowDate = new Date(row.deadtime);
       nowDate.setDate(nowDate.getDate()+30);
       row.deadtime = moment(nowDate).format("yyyy-MM-DD HH:mm:ss");
