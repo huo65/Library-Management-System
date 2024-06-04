@@ -57,7 +57,6 @@ public class LendRecordController {
         bUwrapper.eq(BookWithUser::getReaderId,lendRecord.getReaderId());
         bUwrapper.eq(BookWithUser::getLendtime,lendRecord.getLendTime());
         BookWithUser bU = bookWithUserMapper.selectOne(bUwrapper);
-        bU.setStatus(1);
         bookWithUserMapper.updateById(bU);
 //      图书表
         LambdaQueryWrapper<Book> wrapper = Wrappers.lambdaQuery();
@@ -122,7 +121,6 @@ public class LendRecordController {
             bUwrapper.eq(BookWithUser::getReaderId,lendRecord.getReaderId());
             bUwrapper.eq(BookWithUser::getStatus,"0");
             BookWithUser bU = bookWithUserMapper.selectOne(bUwrapper);
-            bU.setStatus(1);
             bookWithUserMapper.updateById(bU);
 
             LambdaQueryWrapper<Book> wrapper = Wrappers.lambdaQuery();
@@ -140,7 +138,6 @@ public class LendRecordController {
             bUwrapper.eq(BookWithUser::getReaderId,lendRecord.getReaderId());
             bUwrapper.eq(BookWithUser::getStatus,"1");
             BookWithUser bU = bookWithUserMapper.selectOne(bUwrapper);
-            bU.setStatus(0);
             bookWithUserMapper.updateById(bU);
 
             LambdaQueryWrapper<Book> wrapper = Wrappers.lambdaQuery();
