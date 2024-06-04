@@ -4,11 +4,11 @@
     <div style="margin: 10px 0;">
 
       <el-form inline="true" size="small" >
-        <el-form-item label="ISBN" >
-          <el-input v-model="search1" placeholder="Please enter ISBN"  clearable>
-            <template #prefix><el-icon class="el-input__icon"><search/></el-icon></template>
-          </el-input>
-        </el-form-item >
+<!--        <el-form-item label="ISBN" >-->
+<!--          <el-input v-model="search1" placeholder="Please enter ISBN"  clearable>-->
+<!--            <template #prefix><el-icon class="el-input__icon"><search/></el-icon></template>-->
+<!--          </el-input>-->
+<!--        </el-form-item >-->
         <el-form-item label="Book name" >
           <el-input v-model="search2" placeholder="Please enter Book name"  clearable>
             <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
@@ -39,7 +39,7 @@
       <el-table-column prop="id" label="ID" sortable />
       <el-table-column prop="readerid" label="ReaderID" />
       <el-table-column prop="readername" label="ReaderName" />
-      <el-table-column prop="isbn" label="ISBN" />
+      <el-table-column prop="bookId" label="BookId" />
       <el-table-column prop="bookname" label="BookName" />
       <el-table-column prop="number" label="Amount" />
       <el-table-column prop="status" label="Status" v-if="user.role != 3">

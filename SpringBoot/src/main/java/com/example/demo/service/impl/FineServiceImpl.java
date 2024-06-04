@@ -40,7 +40,7 @@ public class FineServiceImpl extends ServiceImpl<FineMapper, Fine>
     public void batchInsertFine(List<Fine> fineList) {
         for (Fine fine : fineList){
             LambdaQueryWrapper<Fine> query = Wrappers.lambdaQuery();
-            query.eq(Fine::getIsbn,fine.getIsbn());
+            query.eq(Fine::getBookId,fine.getBookId());
             query.eq(Fine::getReaderid,fine.getReaderid());
 //            query.eq(Fine::getNumber,fine.getNumber());
             Fine oldFine = fineMapper.selectOne(query);

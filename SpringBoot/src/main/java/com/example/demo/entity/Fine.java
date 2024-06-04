@@ -28,7 +28,7 @@ public class Fine implements Serializable {
     /**
      * 图书id
      */
-    private String isbn;
+    private String bookId;
 
     /**
      * 金额
@@ -66,7 +66,7 @@ public class Fine implements Serializable {
         Fine other = (Fine) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
             && (this.getReaderid() == null ? other.getReaderid() == null : this.getReaderid().equals(other.getReaderid()))
-            && (this.getIsbn() == null ? other.getIsbn() == null : this.getIsbn().equals(other.getIsbn()))
+            && (this.getBookId() == null ? other.getBookId() == null : this.getBookId().equals(other.getBookId()))
             && (this.getNumber() == null ? other.getNumber() == null : this.getNumber().equals(other.getNumber()))
             && (this.getReadername() == null ? other.getReadername() == null : this.getReadername().equals(other.getReadername()));
     }
@@ -77,7 +77,7 @@ public class Fine implements Serializable {
         int result = 1;
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
         result = prime * result + ((getReaderid() == null) ? 0 : getReaderid().hashCode());
-        result = prime * result + ((getIsbn() == null) ? 0 : getIsbn().hashCode());
+        result = prime * result + ((getBookId() == null) ? 0 : getBookId().hashCode());
         result = prime * result + ((getNumber() == null) ? 0 : getNumber().hashCode());
         result = prime * result + ((getReadername() == null) ? 0 : getReadername().hashCode());
         return result;
@@ -91,7 +91,7 @@ public class Fine implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
         sb.append(", readerid=").append(readerid);
-        sb.append(", isbn=").append(isbn);
+        sb.append(", bookId=").append(bookId);
         sb.append(", number=").append(number);
         sb.append(", readername=").append(readername);
         sb.append(", serialVersionUID=").append(serialVersionUID);

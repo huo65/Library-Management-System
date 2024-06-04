@@ -97,7 +97,7 @@
         :before-close="handleClose"
     >
       <el-table :data="outDateBook" style="width: 100%">
-        <el-table-column prop="isbn" label="ISBN"/>
+        <el-table-column prop="bookId" label="ISBN"/>
         <el-table-column prop="bookName" label="Book name"/>
         <el-table-column prop="lendtime" label="Borrowing date"/>
         <el-table-column prop="deadtime" label="Latest return date"/>
@@ -315,57 +315,57 @@ export default {
         this.total = res.data.total
       })
       // 当用户登录，查用户视图记录判断过期
-      // if (this.user.role == 3) {
-      //   request.get("/bookwithuser", {
-      //     params: {
-      //       pageNum: "1",
-      //       pageSize: this.total,
-      //       search1: "",
-      //       search2: "",
-      //       search3: this.user.id,
-      //     }
-      //   }).then(res => {
-      //     //  判断过期逻辑
-      //     console.log(res)
-      //     this.bookData = res.data.records
-      //     this.number = this.bookData.length;
-      //     var nowDate = new Date();
-      //     for (let i = 0; i < this.number; i++) {
-      //       this.isbnArray[i] = this.bookData[i].isbn;
-      //       let dDate = new Date(this.bookData[i].deadtime);
-      //       if (dDate < nowDate && this.bookData[i].status == '0') {
-      //         this.outDateBook[this.numOfOutDataBook] = {
-      //           isbn: this.bookData[i].isbn,
-      //           bookName: this.bookData[i].bookName,
-      //           deadtime: this.bookData[i].deadtime,
-      //           lendtime: this.bookData[i].lendtime,
-      //           buID : this.bookData[i].id
-      //         };
-      //         this.numOfOutDataBook = this.numOfOutDataBook + 1;
-      //       }
-      //     }
-      //     // 后端同步
-      //     let fineForm = [];
-      //     for (let i = 0; i < this.numOfOutDataBook; i++){
-      //       let now = moment();
-      //       let daysDifference = now.diff(this.outDateBook[i].deadtime, 'days');
-      //       fineForm[i] = {
-      //         // id: 100,
-      //         isbn : this.outDateBook[i].isbn,
-      //         bookname:this.outDateBook[i].bookName,
-      //         readerid : this.user.id,
-      //         readername : this.user.username,
-      //         number : daysDifference,
-      //         status: 0,
-      //         buID: this.outDateBook[i].buID,
-      //       }
-      //     }
-      //     request.post("/fine/add", fineForm).then(res => {
-      //       console.log(res)
-      //     })
-      //
-      //   })
-      // }
+      if (this.user.role == 3) {
+        request.get("/bookwithuser", {
+          params: {
+            pageNum: "1",
+            pageSize: this.total,
+            search1: "",
+            search2: "",
+            search3: this.user.id,
+          }
+        }).then(res => {
+          //  判断过期逻辑
+          console.log(res)
+          this.bookData = res.data.records
+          this.number = this.bookData.length;
+          var nowDate = new Date();
+          for (let i = 0; i < this.number; i++) {
+            // this.isbnArray[i] = this.bookData[i].bookId;
+            let dDate = new Date(this.bookData[i].deadtime);
+            if (dDate < nowDate && this.bookData[i].status == '0') {
+              this.outDateBook[this.numOfOutDataBook] = {
+                bookId: this.bookData[i].bookId,
+                bookName: this.bookData[i].bookName,
+                deadtime: this.bookData[i].deadtime,
+                lendtime: this.bookData[i].lendtime,
+                buID : this.bookData[i].id
+              };
+              this.numOfOutDataBook = this.numOfOutDataBook + 1;
+            }
+          }
+          // 后端同步
+          let fineForm = [];
+          for (let i = 0; i < this.numOfOutDataBook; i++){
+            let now = moment();
+            let daysDifference = now.diff(this.outDateBook[i].deadtime, 'days');
+            fineForm[i] = {
+              // id: 100,
+              bookId : this.outDateBook[i].bookId,
+              bookname:this.outDateBook[i].bookName,
+              readerid : this.user.id,
+              readername : this.user.username,
+              number : daysDifference,
+              status: 0,
+              buID: this.outDateBook[i].buID,
+            }
+          }
+          request.post("/fine/add", fineForm).then(res => {
+            console.log(res)
+          })
+
+        })
+      }
       //判断是否具有borrow权力
       request.get("/user/alow/" + this.user.id).then(res => {
         if (res.code == 0) {

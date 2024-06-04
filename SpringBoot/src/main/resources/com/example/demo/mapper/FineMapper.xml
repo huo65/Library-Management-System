@@ -7,7 +7,7 @@
     <resultMap id="BaseResultMap" type="com.example.demo.entity.Fine">
             <id property="id" column="id" jdbcType="INTEGER"/>
             <result property="readerid" column="readerId" jdbcType="INTEGER"/>
-            <result property="isbn" column="ISBN" jdbcType="INTEGER"/>
+            <result property="bookId" column="book_id" jdbcType="INTEGER"/>
             <result property="number" column="number" jdbcType="INTEGER"/>
             <result property="readername" column="readerName" jdbcType="INTEGER"/>
     </resultMap>

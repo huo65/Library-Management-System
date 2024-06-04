@@ -55,9 +55,9 @@ public class FineController {
                               @RequestParam(defaultValue = "") String search3,
                               @RequestParam(defaultValue = "") String search4){
         LambdaQueryWrapper<Fine> wrappers = Wrappers.<Fine>lambdaQuery();
-        if(StringUtils.isNotBlank(search1)){
-            wrappers.like(Fine::getIsbn,search1);
-        }
+//        if(StringUtils.isNotBlank(search1)){
+//            wrappers.like(Fine::,search1);
+//        }
         if(StringUtils.isNotBlank(search2)){
             wrappers.like(Fine::getBookname,search2);
         }
