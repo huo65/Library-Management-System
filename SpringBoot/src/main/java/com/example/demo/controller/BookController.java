@@ -71,13 +71,7 @@ public class BookController {
         }
         return Result.success();
     }
-//    借书 借还逻辑集中在Special
-/*
-this.form.status = "0"
-this.form.id = id
-this.form.borrownum = bn + 1
-this.form.leftNumber = leftNumber - 1
- */
+//    原借书 现借逻辑集中在Special
     @PutMapping
     public  Result<?> update(@RequestBody Book book){
         LambdaQueryWrapper<Book> wrapper = Wrappers.lambdaQuery();

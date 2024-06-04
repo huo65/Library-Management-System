@@ -211,7 +211,7 @@
           <el-table-column prop="location" label="Location"/>
           <el-table-column fixed="right" label="Operation">
             <template v-slot="scope">
-              <!--          <el-button size="mini" @click="handleEdit(scope.row)" v-if="user.role == 2">Modify</el-button>-->
+<!--              <el-button size="mini" @click="handleEdit(scope.row)" v-if="user.role == 2">Modify</el-button>-->
               <el-popconfirm title="Confirm Take down?" @confirm="handleDelete(scope.row.id)" v-if="user.role == 2">
                 <template #reference>
                   <el-button type="danger" size="mini">Take down</el-button>
