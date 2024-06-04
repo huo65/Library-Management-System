@@ -33,9 +33,10 @@ public class SpecialBookController {
 //        具体图书
         LambdaQueryWrapper<Specificbook> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(Specificbook::getId,specificbook.getId());
+        wrapper.eq(Specificbook::getStatus,"1");
         Specificbook selectOne =  specificbookMapper.selectOne(wrapper);
         if (selectOne == null){
-            return Result.error("-1","借书失败01!");
+            return Result.error("-1","该书已经被借阅!");
         }
         selectOne.setStatus("0");
         specificbookMapper.updateById(selectOne);

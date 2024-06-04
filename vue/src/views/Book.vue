@@ -40,6 +40,7 @@
         <el-form-item>
           <el-button size="mini" type="danger" @click="clear">Reset</el-button>
         </el-form-item>
+<!--        过期弹窗提醒-->
         <el-form-item style="float: right" v-if="numOfOutDataBook!=0">
           <el-popconfirm
               confirm-button-text="Confirm"
@@ -59,6 +60,9 @@
     <!-- 按钮-->
     <div style="margin: 10px 0;">
       <el-button type="primary" @click="add" v-if="user.role == 2">Go onto</el-button>
+    </div>
+    <div style="margin: 10px 0;" >
+      <el-button type="primary" @click = "scanOpen" v-if="user.role == 3"> Scan Book </el-button>
     </div>
     <!-- 数据字段-->
     <el-table :data="tableData" stripe border="true" @selection-change="handleSelectionChange">
@@ -232,6 +236,39 @@
       </span>
         </template>
       </el-dialog>
+
+
+      <el-dialog v-model="FindBookDialogVisible" title="Book info" width="50%">
+        <div>
+          <el-upload
+              class="upload-demo"
+              action="javascript:void(0);"
+              :before-upload="beforeUpload"
+          >
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+          </el-upload>
+          <img v-if="imageUrl" :src="imageUrl" alt="Preview" style="max-width: 300px;">
+
+        </div>
+
+        <el-table :data="scanForm" stripe border="true" >
+
+          <el-table-column prop="id" label="Book ID" sortable />
+          <el-table-column prop="isbn" label="ISBN" sortable />
+          <el-table-column prop="name" label="Book name"/>
+          <el-table-column fixed="right" label="Operation">
+            <template v-slot="scope">
+              <!--          用户借书-->
+              <el-button size="mini" @click="handlelend(scope.row.id,scope.row.isbn,scope.row.name,scope.row.status,scope.row.location)"
+                         v-if="user.role == 3 " :disabled="scope.row.status == 0">borrow
+              </el-button>
+
+            </template>
+          </el-table-column>
+        </el-table>
+
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -260,21 +297,6 @@ export default {
     // (this.isbnArray.indexOf(scope.row.isbn)) == -1
     handleSelectionChange(val) {
       this.ids = val.map(v => v.id)
-    },
-    deleteBatch() {
-      if (!this.ids.length) {
-        ElMessage.warning("Please select data!")
-        return
-      }
-      //  一个小优化，直接发送这个数组，而不是一个一个的提交Take down
-      request.post("/book/deleteBatch", this.ids).then(res => {
-        if (res.code === '0') {
-          ElMessage.success("Multi take down success")
-          this.load()
-        } else {
-          ElMessage.error(res.msg)
-        }
-      })
     },
     load() {
       this.numOfOutDataBook = 0;
@@ -363,6 +385,11 @@ export default {
       this.bookdialogVisible = true;
       this.bookTableData = specificbooks;
     } ,
+    // 图书修改
+    handleEdit(row) {
+      this.form = JSON.parse(JSON.stringify(row))
+      this.dialogVisible2 = true
+    },
     handleDelete(id) {
       request.delete("book/" + id).then(res => {
         console.log(res)
@@ -440,6 +467,7 @@ export default {
           request.post("/bookwithuser/insertNew", form3).then(res => {
             console.log(res)
             this.bookdialogVisible = false;
+            this.FindBookDialogVisible = false;
             this.load()
           })
 
@@ -458,10 +486,11 @@ export default {
       this.dialogVisible = true
       this.form = {}
     },
-    handleEdit(row) {
-      this.form = JSON.parse(JSON.stringify(row))
-      this.dialogVisible2 = true
+    scanOpen(){
+      this.FindBookDialogVisible= true
+      this.scanForm = [];
     },
+
     // 添加或者更新
     save() {
       //ES6语法
@@ -541,6 +570,7 @@ export default {
             let value = res.data
             console.log(value)
             this.form = value;
+            this.scanForm[0] = value;
             console.log(res)
           }
           else {ElMessage.error("错误")}
@@ -562,6 +592,8 @@ export default {
       dialogVisible: false,
       dialogVisible2: false,
       bookdialogVisible:false,
+      scanForm:[],
+      FindBookDialogVisible:false,
       bookTableData:{},
       search1: '',
       search2: '',
