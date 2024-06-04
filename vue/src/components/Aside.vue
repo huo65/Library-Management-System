@@ -72,12 +72,6 @@
       </svg>
       <span>Lending record</span>
     </el-menu-item>
-<!--    <el-menu-item index="/lendrecord" v-if="user.role == 3">-->
-<!--      <svg class="icon" aria-hidden="true">-->
-<!--        <use xlink:href="#iconlend-record"></use>-->
-<!--      </svg>-->
-<!--      <span>借阅信息</span>-->
-<!--    </el-menu-item>-->
     <el-menu-item index="/bookwithuser" v-if="user.role == 3">
       <el-icon><grid /></el-icon>
       <span>Borrowing record</span>

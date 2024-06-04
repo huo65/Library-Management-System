@@ -227,8 +227,8 @@
         </el-table>
         <template #footer>
       <span class="dialog-footer">
-        <el-button @click="dialogVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="save">Confirm</el-button>
+<!--        <el-button @click="dialogVisible = false ">Cancel</el-button>-->
+<!--        <el-button type="primary" @click="save">Confirm</el-button>-->
       </span>
         </template>
       </el-dialog>
@@ -440,8 +440,10 @@ export default {
           this.form2.status = 0;
           request.post("/bookwithuser/insertNew", form3).then(res => {
             console.log(res)
+            this.dialogVisible = false;
             this.load()
           })
+
           ElMessage({
             message: 'Borrow success',
             type: 'success',

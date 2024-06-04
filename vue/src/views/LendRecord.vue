@@ -39,15 +39,11 @@
         </el-form-item>
       </el-form>
     </div>
+    <!-- 按钮-->
+    <div style="margin: 10px 0;" >
+      <el-button type="primary" @click = "scanOpen"> Scan Book </el-button>
+    </div>
 
-    <!--按钮-->
-<!--    <div style="margin: 10px 0;" v-if="user.role == 2">-->
-<!--      <el-popconfirm title="Confirm delete?" @confirm="deleteBatch">-->
-<!--        <template #reference>-->
-<!--          <el-button type="danger" size="mini">Multi delete</el-button>-->
-<!--        </template>-->
-<!--      </el-popconfirm>-->
-<!--    </div>-->
     <!-- 数据字段-->
 
     <el-table :data="tableData" stripe border="true" @selection-change="handleSelectionChange">
@@ -146,6 +142,38 @@
       </span>
         </template>
       </el-dialog>
+
+
+      <el-dialog v-model="scanDialogVisible" title="LendRecord info" width="50%">
+        <div>
+          <el-upload
+              class="upload-demo"
+              action="javascript:void(0);"
+              :before-upload="beforeUpload"
+          >
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+          </el-upload>
+          <img v-if="imageUrl" :src="imageUrl" alt="Preview" style="max-width: 300px;">
+
+        </div>
+
+        <el-table :data="scanForm" >
+          <el-table-column prop="bookId" label="Book ID" sortable />
+          <el-table-column prop="bookName" label="BookName"  />
+          <el-table-column prop="readerId" label="Reader ID" />
+          <el-table-column prop="readerName" label="Name" />
+          <el-table-column prop="lendTime" label="LendTime" />
+
+        </el-table>
+
+        <template #footer>
+      <span class="dialog-footer">
+<!--        <el-button @click="dialogVisible = false">Cancel</el-button>-->
+        <el-button type="primary" @click="handleScanReturn(scanForm[0].recordId)">return</el-button>
+      </span>
+        </template>
+      </el-dialog>
     </div>
   </div>
 
@@ -171,23 +199,6 @@ export default defineComponent({
   },
   name: 'LendRecord',
   methods: {
-    handleSelectionChange(val) {
-      this.forms = val
-    },
-    deleteBatch() {
-      if (!this.forms.length) {
-        ElMessage.warning("Please select data！")
-        return
-      }
-      request.post("/LendRecord/deleteRecords", this.forms).then(res => {
-        if (res.code === '0') {
-          ElMessage.success("Multi delete success")
-          this.load()
-        } else {
-          ElMessage.error(res.msg)
-        }
-      })
-    },
     load() {
       request.get("/LendRecord", {
         params: {
@@ -249,10 +260,65 @@ export default defineComponent({
         this.load()
       })
     },
-    add() {
-      this.dialogVisible2 = true
-      this.form = {}
-    }
+
+
+    scanOpen(){
+      this.scanDialogVisible= true
+      this.form ={}
+    },
+    handleScanReturn(scan){
+      request.put("LendRecordByScan", scan).then(res => {
+        console.log(res)
+        if (res.code == 0) {
+          ElMessage.success("return success")
+        } else
+          ElMessage.error(res.msg)
+        this.load()
+      })
+
+    },
+    beforeUpload(file) {
+      const isJPGorPNG = file.type === 'image/jpeg' || file.type === 'image/png';
+      const isLt500K = file.size / 1024 < 5000;
+
+      if (!isJPGorPNG) {
+        console.error('上传图片只能是 JPG/PNG 格式!');
+      }
+      if (!isLt500K) {
+        console.error('上传图片大小不能超过 500KB!');
+      }
+
+      if (isJPGorPNG && isLt500K) {
+        // 将图片转换为base64
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          this.imageUrl = reader.result; // 用于预览
+          // 发送请求
+          this.sendToBackend(reader.result);
+        };
+        return false; // 阻止默认上传行为
+      }
+    },
+    async sendToBackend(imageBase64) {
+      try {
+        // 注意：实际开发中应使用POST请求，并且可能需要调整后端接口以接收base64字符串
+        request.post("barCode/getReturnInfo",imageBase64).then(res=>{
+          if(res.code == 0)
+          {
+            let value = res.data
+            console.log(value)
+            this.scanForm[0] = value;
+            console.log(res)
+          }
+          else {ElMessage.error("错误")}
+        })
+        // 这里可以处理后端返回的数据
+      } catch (error) {
+        console.error('请求错误:', error);
+      }
+    },
+
   },
 
   setup() {
@@ -290,6 +356,7 @@ export default defineComponent({
   data() {
     return {
       form: {},
+      scanForm:[0],
       search1: '',
       search2: '',
       search3: '',
@@ -299,8 +366,8 @@ export default defineComponent({
       tableData: [],
       user: {},
       dialogVisible: false,
-      dialogVisible2: false
-
+      scanDialogVisible:false,
+      imageUrl: '', // 用于预览的图片base64编码
     }
   },
 

@@ -62,7 +62,7 @@ const routes = [
         path: 'code',
         name: 'Code',
         component: () => import("@/views/Scan.vue")
-      }
+      },
     ]
   },
   {
