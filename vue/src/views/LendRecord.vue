@@ -271,6 +271,7 @@ export default defineComponent({
         console.log(res)
         if (res.code == 0) {
           ElMessage.success("return success")
+          this.scanDialogVisible = false;
         } else
           ElMessage.error(res.msg)
         this.load()

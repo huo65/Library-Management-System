@@ -440,7 +440,7 @@ export default {
           this.form2.status = 0;
           request.post("/bookwithuser/insertNew", form3).then(res => {
             console.log(res)
-            this.dialogVisible = false;
+            this.bookdialogVisible = false;
             this.load()
           })
 
