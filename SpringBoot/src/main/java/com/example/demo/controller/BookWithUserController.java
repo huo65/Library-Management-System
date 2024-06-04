@@ -44,11 +44,11 @@ public class BookWithUserController {
         bookWithUserMapper.insert(BookWithUser);
         return Result.success();
     }
-//    前端续借 TODO 同步
+//    前端续借  同步(只修改截止时间，无需同步)
     @PostMapping
     public Result<?> update(@RequestBody BookWithUser BookWithUser){
         UpdateWrapper<BookWithUser> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("isbn",BookWithUser.getIsbn()).eq("readerId",BookWithUser.getId());
+        updateWrapper.eq("book_id",BookWithUser.getBookId()).eq("readerId",BookWithUser.getId()).eq("status",0);
         bookWithUserMapper.update(BookWithUser, updateWrapper);
         return Result.success();
     }

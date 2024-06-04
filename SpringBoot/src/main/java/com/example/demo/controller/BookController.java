@@ -71,7 +71,7 @@ public class BookController {
         }
         return Result.success();
     }
-//    借书 TODO 把借还逻辑集中在Special
+//    借书 借还逻辑集中在Special
 /*
 this.form.status = "0"
 this.form.id = id

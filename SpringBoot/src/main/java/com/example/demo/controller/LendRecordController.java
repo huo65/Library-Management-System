@@ -111,37 +111,16 @@ public class LendRecordController {
         return Result.success(lendRecordPage);
     }
 
-    @PutMapping("/{isbn}")
-//   TODO  同步 修改图书状态
-    public  Result<?> update(@PathVariable String isbn,@RequestBody LendRecord lendRecord){
-        UpdateWrapper<LendRecord> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("isbn",isbn);
-        LendRecord lendrecord = new LendRecord();
-        lendrecord.setLendTime(lendRecord.getLendTime());
-        lendrecord.setReturnTime(lendRecord.getReturnTime());
-        lendrecord.setStatus(lendRecord.getStatus());
-        LendRecordMapper.update(lendrecord, updateWrapper);
-        return Result.success();
-    }
-    @PutMapping("/{lendTime}")
-    public  Result<?> update2(@PathVariable Date lendTime, @RequestBody LendRecord lendRecord){
-        UpdateWrapper<LendRecord> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("lendTime",lendTime);
-        LendRecord lendrecord = new LendRecord();
-        lendrecord.setReturnTime(lendRecord.getReturnTime());
-        lendrecord.setStatus(lendRecord.getStatus());
-        LendRecordMapper.update(lendrecord, updateWrapper);
-        return Result.success();
-    }
-
     @PutMapping
     public  Result<?> update(@RequestBody LendRecord lendRecord){
+        lendRecord.setReturnTime(null);
         log.info("########################接受参数"+lendRecord);
         LendRecordMapper.updateById(lendRecord);
         if (lendRecord.getStatus() .equals("1")) {
             LambdaQueryWrapper<BookWithUser> bUwrapper = Wrappers.lambdaQuery();
-            bUwrapper.eq(BookWithUser::getIsbn, lendRecord.getIsbn());
-            bUwrapper.eq(BookWithUser::getLendtime, lendRecord.getLendTime());
+            bUwrapper.eq(BookWithUser::getBookId, lendRecord.getBookId());
+            bUwrapper.eq(BookWithUser::getReaderId,lendRecord.getReaderId());
+            bUwrapper.eq(BookWithUser::getStatus,"0");
             BookWithUser bU = bookWithUserMapper.selectOne(bUwrapper);
             bU.setStatus(1);
             bookWithUserMapper.updateById(bU);
@@ -151,10 +130,15 @@ public class LendRecordController {
             Book book = bookMapper.selectOne(wrapper);
             book.setLeftNumber(book.getLeftNumber() + 1);
             bookMapper.updateById(book);
+
+            Specificbook specificbook = specificbookMapper.selectById(lendRecord.getBookId());
+            specificbook.setStatus("1");
+
         }else{
             LambdaQueryWrapper<BookWithUser> bUwrapper = Wrappers.lambdaQuery();
-            bUwrapper.eq(BookWithUser::getIsbn, lendRecord.getIsbn());
-            bUwrapper.eq(BookWithUser::getLendtime, lendRecord.getLendTime());
+            bUwrapper.eq(BookWithUser::getBookId, lendRecord.getBookId());
+            bUwrapper.eq(BookWithUser::getReaderId,lendRecord.getReaderId());
+            bUwrapper.eq(BookWithUser::getStatus,"1");
             BookWithUser bU = bookWithUserMapper.selectOne(bUwrapper);
             bU.setStatus(0);
             bookWithUserMapper.updateById(bU);
@@ -164,6 +148,8 @@ public class LendRecordController {
             Book book = bookMapper.selectOne(wrapper);
             book.setLeftNumber(book.getLeftNumber() - 1);
             bookMapper.updateById(book);
+            Specificbook specificbook = specificbookMapper.selectById(lendRecord.getBookId());
+            specificbook.setStatus("0");
         }
         return Result.success();
     }

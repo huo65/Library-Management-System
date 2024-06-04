@@ -374,7 +374,6 @@ export default {
       })
     },
 
-    // TODO 借书逻辑，先解决书的展示
     handlelend(id, isbn, name,status, location) {
 
       if (this.phone == null) {
