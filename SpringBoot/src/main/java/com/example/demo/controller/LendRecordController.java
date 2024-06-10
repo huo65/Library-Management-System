@@ -68,6 +68,7 @@ public class LendRecordController {
 //        具体图书
         Specificbook specificbook = specificbookMapper.selectById(lendRecord.getBookId());
         specificbook.setStatus("1");
+        specificbookMapper.updateById(specificbook);
         return Result.success();
     }
     @PostMapping("/deleteRecords")

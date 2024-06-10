@@ -305,9 +305,9 @@ export default {
         params: {
           pageNum: this.currentPage,
           pageSize: this.pageSize,
-          search1: this.search1,
-          search2: this.search2,
-          search3: this.search3,
+          isbnKeyword: this.search1,
+          nameKeyword: this.search2,
+          authorKeyword: this.search3,
         }
       }).then(res => {
         console.log(res)
@@ -395,6 +395,7 @@ export default {
         console.log(res)
         if (res.code == 0) {
           ElMessage.success("Take down success")
+          this.bookdialogVisible = false;
         } else
           ElMessage.error(res.msg)
         this.load()
@@ -614,4 +615,4 @@ export default {
   },
 }
 </script>
-<style scoped src="..\..\dist\css\responsive_ui.css"></style>
+<!--<style scoped src="..\..\dist\css\responsive_ui.css"></style>-->

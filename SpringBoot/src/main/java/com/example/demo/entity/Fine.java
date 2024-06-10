@@ -11,7 +11,7 @@ import lombok.Data;
  * 
  * @TableName Fine
  */
-@TableName(value ="Fine")
+@TableName(value ="fine")
 @Data
 public class Fine implements Serializable {
     /**

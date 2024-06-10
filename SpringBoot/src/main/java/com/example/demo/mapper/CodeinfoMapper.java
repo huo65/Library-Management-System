@@ -3,6 +3,7 @@ package com.example.demo.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.demo.entity.Codeinfo;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
 * @author 86132
@@ -10,6 +11,7 @@ import com.example.demo.entity.Codeinfo;
 * @createDate 2024-06-01 11:01:32
 * @Entity generator.domain.Codeinfo
 */
+@Mapper
 public interface CodeinfoMapper extends BaseMapper<Codeinfo> {
 
 }

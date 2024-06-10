@@ -88,16 +88,23 @@ public class BookController {
     @DeleteMapping("/{id}")
     @Transactional
     public Result<?> delete(@PathVariable Long id){
-        LambdaQueryWrapper<Book> wrapper = Wrappers.lambdaQuery();
-        wrapper.eq(Book::getIsbn,id);
-        Book book =  bookMapper.selectOne(wrapper);
-        LambdaQueryWrapper<BookWithUser> wrapper1 = Wrappers.lambdaQuery();
-        wrapper1.eq(BookWithUser::getIsbn,book.getIsbn());
-        BookWithUser bookWithUser = bookWithUserMapper.selectOne(wrapper1);
-        if (bookWithUser != null && bookWithUser.getStatus() == 0){
-            return Result.error("-1","书籍在借阅中,无法下架");
+        LambdaQueryWrapper<Specificbook> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(Specificbook::getId, id);
+        Specificbook specificbook = specificbookMapper.selectOne(wrapper);
+        if ("0".equals(specificbook.getStatus())){
+            return Result.error("-1", "书本未归还，无法下架");
         }
-         bookMapper.deleteById(id);
+        specificbookMapper.deleteById(id);
+        LambdaQueryWrapper<Book> bookWrapper = Wrappers.lambdaQuery();
+        bookWrapper.eq(Book::getIsbn, specificbook.getIsbn());
+        Book book = bookMapper.selectOne(bookWrapper);
+        book.setTotalNumber(book.getTotalNumber() - 1);
+        book.setLeftNumber(book.getLeftNumber() - 1);
+        if (book.getTotalNumber() == 0) {
+            bookMapper.delete(bookWrapper);
+        }else{
+            bookMapper.update(book, bookWrapper);
+        }
         return Result.success();
     }
     @GetMapping
